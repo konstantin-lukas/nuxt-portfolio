@@ -16,7 +16,7 @@ a {
     border: var(--border-width) solid var(--black);
     position: relative;
     font-size: var(--font-size-medium);
-    padding: 0.2em 1em;
+    padding: 0.15em 1em;
     display: inline-block;
     margin: .5em;
     border-radius: .5em;
@@ -27,7 +27,7 @@ a {
         position: absolute;
         left: 50%;
         top: 50%;
-        transform: translate(-44%, -41%);
+        transform: translate(-44%, -42%);
         background-color: var(--pink);
         z-index: -1;
         border-radius: .5em;
