@@ -12,7 +12,12 @@ export default [
                 "ignores": []
             }],
             "vue/multi-word-component-names": ["error", {
-                "ignores": ["index"]
+                "ignores": ["index", "default"]
+            }],
+            "vue/html-closing-bracket-spacing": ["error", {
+                "startTag": "never",
+                "endTag": "never",
+                "selfClosingTag": "never"
             }]
         }
     }

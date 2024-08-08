@@ -3,9 +3,7 @@
 </script>
 
 <template>
-    <NuxtLink>
-        <slot/>
-    </NuxtLink>
+    <slot/>
 </template>
 
 <style scoped lang="scss">
