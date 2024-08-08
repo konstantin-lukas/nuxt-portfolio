@@ -7,5 +7,8 @@ export default defineNuxtConfig({
         '~/assets/mixins.scss',
         '~/assets/variables.scss'
     ],
-    modules: ["@nuxt/fonts"]
+    modules: ["@nuxt/fonts"],
+    routeRules: {
+        '/': { prerender: true }
+    }
 })
