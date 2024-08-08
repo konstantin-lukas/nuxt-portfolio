@@ -10,8 +10,13 @@
 	border: 0;
 	font: inherit;
 	vertical-align: baseline;
+    line-height: 1.2em;
 }
 
 a {
     text-decoration: none;
+}
+
+ol, ul {
+	list-style: none;
 }
