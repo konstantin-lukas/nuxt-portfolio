@@ -11,6 +11,7 @@
         "lint": "eslint"
     },
     "dependencies": {
+        "@nuxt/fonts": "^0.7.1",
         "nuxt": "^3.12.4",
         "vue": "latest"
     },

@@ -1,7 +1,17 @@
 :root {
-    --white: #ffffff;
-    --black: #000000;
-    --gray50: #808080;
-    --gray66: #a8a8a8;
-    --pink: #ff2977;
+    font-family: "Josefin Sans", sans-serif;
+    font-size: var(--font-size-root);
+    font-weight: 300;
+}
+
+* {
+    margin: 0;
+	padding: 0;
+	border: 0;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+a {
+    text-decoration: none;
 }
