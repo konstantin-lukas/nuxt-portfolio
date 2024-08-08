@@ -18,8 +18,7 @@ a {
     font-size: var(--font-size-medium);
     padding: 0.15em 1em;
     display: inline-block;
-    margin: .5em;
-    border-radius: .5em;
+    border-radius: .55em;
     &::after {
         content: "";
         width: calc(100% + 2px);
