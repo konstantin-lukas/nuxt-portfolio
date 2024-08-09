@@ -2,9 +2,9 @@
 defineProps({
     name: {
         required: true,
-        type: String
-    }
-})
+        type: String,
+    },
+});
 </script>
 
 <template>
@@ -13,7 +13,7 @@ defineProps({
             <slot/>
         </h2>
         <button class="image-container">
-            <NuxtImg :src="'/images/projects/' + name + '.webp'"/>
+            <NuxtImg :src="`/images/projects/${name}.webp`"/>
         </button>
     </div>
 </template>
@@ -32,6 +32,7 @@ defineProps({
         overflow: hidden;
         position: relative;
         border-radius: 5vw 0 0 5vw;
+        transform: translateX(100%);
         img {
             width: 100%;
             position: absolute;
@@ -52,6 +53,7 @@ defineProps({
         margin: 0 0.75em -.2em 0;
         background: var(--white);
         position: relative;
+        transform: translateX(-61.8vw);
         &::before {
             content: "";
             height: var(--border-width);
@@ -63,6 +65,14 @@ defineProps({
             top: calc(50% - (1.2 * var(--border-width)) / 2);
         }
     }
+    &.in-view {
+        .image-container {
+            animation: slide-in-from-right 1s var(--bezier) forwards;
+        }
+        h2 {
+            animation: slide-in-from-left 1s var(--bezier) forwards;
+        }
+    }
 }
 
 .project-preview:nth-of-type(2n) {
@@ -70,12 +80,40 @@ defineProps({
     h2 {
         padding: 0.25em 0.75em 0 0;
         margin: 0 0 -.2em 0.75em;
+        transform: translateX(61.8vw);
         &::before {
             left: 100%;
         }
     }
     .image-container {
         border-radius: 0 5vw 5vw 0;
+        transform: translateX(-100%);
+    }
+    &.in-view {
+        .image-container {
+            animation: slide-in-from-left 1s var(--bezier) forwards;
+        }
+        h2 {
+            animation: slide-in-from-right 1s var(--bezier) forwards;
+        }
+    }
+}
+
+@keyframes slide-in-from-right {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: none;
+    }
+}
+
+@keyframes slide-in-from-left {
+    0% {
+        transform: translateX(-61.8vw);
+    }
+    100% {
+        transform: none;
     }
 }
 </style>

@@ -1,29 +1,16 @@
-import pluginVue from "eslint-plugin-vue";
+import antfu from "@antfu/eslint-config";
 
-export default [
-    ...pluginVue.configs["flat/recommended"],
-    {
-        rules: {
-            "vue/html-indent": ["warn", 4, {
-                "attribute": 1,
-                "baseIndent": 1,
-                "closeBracket": 0,
-                "alignAttributesVertically": true
-            }],
-            "vue/multi-word-component-names": ["error", {
-                "ignores": ["pages/"]
-            }],
-            "vue/html-closing-bracket-spacing": ["error", {
-                "startTag": "never",
-                "endTag": "never",
-                "selfClosingTag": "never"
-            }]
-        }
+export default antfu({
+    type: "app",
+    stylistic: {
+        indent: 4,
+        semi: true,
+        quotes: "double",
     },
-    {
-        files: ["pages/**/*.vue", "layouts/**/*.vue"],
-        rules: {
-            "vue/multi-word-component-names": "off",
+    typescript: true,
+    vue: {
+        overrides: {
+            "vue/html-closing-bracket-spacing": 0,
         },
-    }
-];
+    },
+});

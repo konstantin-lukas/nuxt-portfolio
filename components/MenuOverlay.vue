@@ -1,6 +1,6 @@
 <script setup lang="ts">
+defineEmits(["navigation"]);
 const route = useRoute();
-defineEmits(["navigation"])
 </script>
 
 <template>
@@ -11,7 +11,7 @@ defineEmits(["navigation"])
                 <NuxtLink
                     to="/"
                     class="home"
-                    :class="{current: route.name == 'index'}"
+                    :class="{ current: route.name === 'index' }"
                     @click="$emit('navigation')"
                 >
                     Home
@@ -19,7 +19,7 @@ defineEmits(["navigation"])
                 <NuxtLink
                     to="/projekte"
                     class="projects"
-                    :class="{current: route.name == 'projekte'}"
+                    :class="{ current: route.name === 'projekte' }"
                     @click="$emit('navigation')"
                 >
                     Projekte
@@ -35,8 +35,8 @@ defineEmits(["navigation"])
                 <span class="anchor"/>
             </div>
             <div class="footer-nav">
-                <NuxtLink 
-                    class="data" 
+                <NuxtLink
+                    class="data"
                     to="/datenschutz"
                     @click="$emit('navigation')"
                 >
@@ -99,7 +99,6 @@ defineEmits(["navigation"])
         box-shadow: 0 0.15em 1.5em 0 rgba(0,0,0,.1), 0 0 1em 0 rgba(0,0,0,.03);
     }
 }
-
 
 .main-nav {
     width: 100%;

@@ -8,9 +8,9 @@ import projects from "assets/scripts/projects";
             <h1>Projekte</h1>
         </div>
         <div>
-            <ProjectPreview 
-                v-for="project in projects" 
-                :key="project.name" 
+            <ProjectPreview
+                v-for="project in projects"
+                :key="project.name"
                 :name="project.name"
             >
                 {{ project.title }}
