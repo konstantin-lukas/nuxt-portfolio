@@ -1,5 +1,5 @@
 :root {
-    font-family: "Josefin Sans", sans-serif;
+    font-family: "Josefin Sans Light", "Josefin Sans", sans-serif;
     font-size: var(--font-size-root);
     font-weight: 300;
 }
@@ -11,6 +11,8 @@
 	font: inherit;
 	vertical-align: baseline;
     line-height: 1.2em;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
 }
 
 a {
