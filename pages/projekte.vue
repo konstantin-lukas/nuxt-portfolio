@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+import projects from "assets/scripts/projects";
 </script>
 
 <template>
@@ -8,23 +8,12 @@
             <h1>Projekte</h1>
         </div>
         <div>
-            <ProjectPreview name="zitatsuchmaschine">
-                Zitatsuchmaschine
-            </ProjectPreview>
-            <ProjectPreview name="oslo">
-                Oslo
-            </ProjectPreview>
-            <ProjectPreview name="anzol">
-                Anzol
-            </ProjectPreview>
-            <ProjectPreview name="nox">
-                Nox
-            </ProjectPreview>
-            <ProjectPreview name="currency-input">
-                Currency Input
-            </ProjectPreview>
-            <ProjectPreview name="untitled-ghost-game">
-                Untitled Ghost Game
+            <ProjectPreview 
+                v-for="project in projects" 
+                :key="project.name" 
+                :name="project.name"
+            >
+                {{ project.title }}
             </ProjectPreview>
         </div>
     </div>
