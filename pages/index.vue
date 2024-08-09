@@ -17,6 +17,7 @@
 <style scoped lang="scss">
 .container {
     position: relative;
+    display: inline-block;
     top: 0;
     left: 12.5vw;
 }
