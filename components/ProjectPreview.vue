@@ -1,24 +1,33 @@
 <script setup lang="ts">
-const props = defineProps({
+defineProps({
     name: {
         required: true,
         type: String,
     },
 });
-const cont = ref<Element & { projectName: string } | null>(null);
-defineExpose({
-    cont,
-    projectName: props.name,
-});
+const target = ref<Element | null>(null);
+const inView = ref(false);
+let observer: IntersectionObserver;
 onMounted(() => {
-    if (cont.value) cont.value.projectName = props.name;
+    observer = new IntersectionObserver((entries) => {
+        if (entries?.[0].isIntersecting) inView.value = true;
+    }, {
+        root: document,
+        rootMargin: "0px",
+        threshold: 0,
+    });
+    observer.observe(target.value as Element);
+});
+onBeforeUnmount(() => {
+    observer.disconnect();
 });
 </script>
 
 <template>
     <div
-        ref="cont"
+        ref="target"
         class="project-preview"
+        :class="{ 'in-view': inView }"
     >
         <h2 class="title">
             <slot/>
