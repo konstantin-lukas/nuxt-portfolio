@@ -12,7 +12,7 @@ export default [
                 "ignores": []
             }],
             "vue/multi-word-component-names": ["error", {
-                "ignores": ["index", "default"]
+                "ignores": ["pages/"]
             }],
             "vue/html-closing-bracket-spacing": ["error", {
                 "startTag": "never",
@@ -20,5 +20,11 @@ export default [
                 "selfClosingTag": "never"
             }]
         }
+    },
+    {
+        files: ["pages/**/*.vue"],
+        rules: {
+            "vue/multi-word-component-names": "off",
+        },
     }
 ];
