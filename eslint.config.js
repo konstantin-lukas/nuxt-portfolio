@@ -7,6 +7,9 @@ export default antfu({
         semi: true,
         quotes: "double",
     },
+    rules: {
+        "antfu/if-newline": "off",
+    },
     typescript: true,
     vue: {
         overrides: {

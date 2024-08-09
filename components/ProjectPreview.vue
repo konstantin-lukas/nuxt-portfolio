@@ -1,14 +1,25 @@
 <script setup lang="ts">
-defineProps({
+const props = defineProps({
     name: {
         required: true,
         type: String,
     },
 });
+const cont = ref<Element & { projectName: string } | null>(null);
+defineExpose({
+    cont,
+    projectName: props.name,
+});
+onMounted(() => {
+    if (cont.value) cont.value.projectName = props.name;
+});
 </script>
 
 <template>
-    <div class="project-preview">
+    <div
+        ref="cont"
+        class="project-preview"
+    >
         <h2 class="title">
             <slot/>
         </h2>
@@ -21,6 +32,7 @@ defineProps({
 <style scoped lang="scss">
 @import "assets/styles/mixins";
 .project-preview {
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -67,10 +79,10 @@ defineProps({
     }
     &.in-view {
         .image-container {
-            animation: slide-in-from-right 1s var(--bezier) forwards;
+            animation: slide-in-from-right 1.25s var(--bezier) forwards;
         }
         h2 {
-            animation: slide-in-from-left 1s var(--bezier) forwards;
+            animation: slide-in-from-left 1.25s var(--bezier) forwards;
         }
     }
 }
@@ -91,10 +103,10 @@ defineProps({
     }
     &.in-view {
         .image-container {
-            animation: slide-in-from-left 1s var(--bezier) forwards;
+            animation: slide-in-from-left 1.25s var(--bezier) forwards;
         }
         h2 {
-            animation: slide-in-from-right 1s var(--bezier) forwards;
+            animation: slide-in-from-right 1.25s var(--bezier) forwards;
         }
     }
 }
