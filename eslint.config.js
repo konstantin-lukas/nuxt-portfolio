@@ -8,8 +8,7 @@ export default [
                 "attribute": 1,
                 "baseIndent": 1,
                 "closeBracket": 0,
-                "alignAttributesVertically": true,
-                "ignores": []
+                "alignAttributesVertically": true
             }],
             "vue/multi-word-component-names": ["error", {
                 "ignores": ["pages/"]
@@ -22,7 +21,7 @@ export default [
         }
     },
     {
-        files: ["pages/**/*.vue"],
+        files: ["pages/**/*.vue", "layouts/**/*.vue"],
         rules: {
             "vue/multi-word-component-names": "off",
         },
