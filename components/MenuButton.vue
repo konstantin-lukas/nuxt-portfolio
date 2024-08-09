@@ -13,7 +13,7 @@ const open = ref(false);
 </template>
 
 <style scoped lang="scss">
-@import "../assets/mixins.scss";
+@import "../assets/styles/mixins";
 button {
     z-index: 101;
     position: fixed;

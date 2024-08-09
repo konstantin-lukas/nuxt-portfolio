@@ -9,7 +9,7 @@
 </template>
 
 <style scoped lang="scss">
-@import "../assets/mixins.scss";
+@import "../assets/styles/mixins";
 a {
     color: var(--white);
     background-color: transparent;

@@ -81,7 +81,7 @@ defineEmits(["navigation"])
         top: 0;
         left: 0;
         opacity: 0;
-        transition: opacity .2s cubic-bezier(0,.5,.56,1.01) .4s;
+        transition: opacity .2s cubic-bezier(0, .5, .5, 1) .4s;
     }
 
     .menu-background {
@@ -94,7 +94,7 @@ defineEmits(["navigation"])
         right: 3rem;
         display: block;
         transform: translate(50%,-50%);
-        transition: all .75s cubic-bezier(0,.5,.56,1.01);
+        transition: all .75s cubic-bezier(0, .5, .5, 1);
         z-index: -1;
         box-shadow: 0 0.15em 1.5em 0 rgba(0,0,0,.1), 0 0 1em 0 rgba(0,0,0,.03);
     }
@@ -111,7 +111,7 @@ defineEmits(["navigation"])
         position: relative;
         margin-left: 25%;
         display: inline-block;
-        transition: padding-left .3s cubic-bezier(0,.5,.56,1.01), opacity .3s cubic-bezier(0,.5,.56,1.01);
+        transition: padding-left .3s cubic-bezier(0, .5, .5, 1), opacity .3s cubic-bezier(0, .5, .5, 1);
     }
     a, span {
         position: relative;
@@ -119,7 +119,7 @@ defineEmits(["navigation"])
         z-index: 1;
         display: block;
         opacity: .3;
-        transition: padding-left .3s cubic-bezier(0,.5,.56,1.01), opacity .3s cubic-bezier(0,.5,.56,1.01);
+        transition: padding-left .3s cubic-bezier(0, .5, .5, 1), opacity .3s cubic-bezier(0, .5, .5, 1);
         font-size: 48px;
         padding: .5em 0;
         line-height: 1em;
@@ -202,7 +202,7 @@ span.anchor {
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
-    transition: top .5s cubic-bezier(0,.5,.56,1.01);
+    transition: top .5s cubic-bezier(0, .5, .5, 1);
     display: none;
 }
 
@@ -252,7 +252,7 @@ span.anchor {
         margin-right: 1em;
         opacity: 1;
         padding-bottom: 0;
-        transition: padding-bottom .5s cubic-bezier(0,.5,.56,1.01);
+        transition: padding-bottom .5s cubic-bezier(0, .5, .5, 1);
         &::before {
             content: "";
             background-color: var(--pink);
@@ -262,7 +262,7 @@ span.anchor {
             position: absolute;
             left: 0;
             bottom: 0;
-            transition: transform .5s cubic-bezier(0,.5,.56,1.01);
+            transition: transform .5s cubic-bezier(0, .5, .5, 1);
         }
         &:hover::before {
             transform: scaleX(1);
