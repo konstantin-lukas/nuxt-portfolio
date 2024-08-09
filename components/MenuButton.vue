@@ -4,10 +4,7 @@ const open = ref(false);
 </script>
 
 <template>
-    <button
-        :class="{ open }"
-        @click="open = !open"
-    >
+    <button>
         <span>
             <span/>
             <span/>
@@ -18,6 +15,7 @@ const open = ref(false);
 <style scoped lang="scss">
 @import "../assets/mixins.scss";
 button {
+    z-index: 101;
     position: fixed;
     top: 2rem;
     right: 2rem;

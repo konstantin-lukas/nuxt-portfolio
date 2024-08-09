@@ -9,7 +9,7 @@
             <h2>Full-Stack Developer</h2>
         </div>
         <ButtonLink to="/projekte">
-            projekte.
+            Projekte
         </ButtonLink>
     </div>
 </template>

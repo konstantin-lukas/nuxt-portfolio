@@ -1,10 +1,18 @@
 <script setup lang="ts">
-
+import { ref } from 'vue';
+const menuOpen = ref(false);
 </script>
 
 <template>
     <header>
-        <MenuButton/>
+        <MenuButton
+            :class="{ open: menuOpen }"
+            @click="() => menuOpen = !menuOpen"
+        />
+        <MenuOverlay
+            :class="{ open: menuOpen }"
+            @navigation="() => menuOpen = false"
+        />
     </header>
     <main>
         <slot/>

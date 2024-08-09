@@ -16,7 +16,7 @@ a {
     border: var(--border-width) solid var(--black);
     position: relative;
     font-size: var(--font-size-medium);
-    padding: 0.15em 1em;
+    padding: 0.2em 1em 0.1em 1em;
     display: inline-block;
     border-radius: .55em;
     &::after {
