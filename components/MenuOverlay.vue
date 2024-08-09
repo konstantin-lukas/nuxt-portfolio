@@ -71,6 +71,7 @@ const route = useRoute();
         .menu-background {
             width: 300vmax;
             height: 300vmax;
+            border-width: var(--border-width);
         }
     }
 
@@ -94,9 +95,10 @@ const route = useRoute();
         right: 3rem;
         display: block;
         transform: translate(50%,-50%);
-        transition: all .75s cubic-bezier(0, .5, .5, 1);
+        transition: all 1s cubic-bezier(0, .5, .5, 1);
         z-index: -1;
-        box-shadow: 0 0.15em 1.5em 0 rgba(0,0,0,.1), 0 0 1em 0 rgba(0,0,0,.03);
+        border: 0 var(--gray66) solid;
+        box-sizing: border-box;
     }
 }
 

@@ -1,0 +1,28 @@
+@keyframes slide-in-from-top {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: none;
+        opacity: 1;
+    }
+}
+
+@keyframes slide-in-from-right {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: none;
+    }
+}
+
+@keyframes slide-in-from-left {
+    0% {
+        transform: translateX(-61.8vw);
+    }
+    100% {
+        transform: none;
+    }
+}

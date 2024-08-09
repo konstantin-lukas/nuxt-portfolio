@@ -119,22 +119,4 @@ onBeforeUnmount(() => {
         }
     }
 }
-
-@keyframes slide-in-from-right {
-    0% {
-        transform: translateX(100%);
-    }
-    100% {
-        transform: none;
-    }
-}
-
-@keyframes slide-in-from-left {
-    0% {
-        transform: translateX(-61.8vw);
-    }
-    100% {
-        transform: none;
-    }
-}
 </style>

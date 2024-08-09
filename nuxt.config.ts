@@ -6,6 +6,7 @@ export default defineNuxtConfig({
         "~/assets/styles/main.scss",
         "~/assets/styles/mixins.scss",
         "~/assets/styles/variables.scss",
+        "~/assets/styles/animations.scss",
     ],
     modules: ["@nuxt/fonts", "@nuxt/image"],
     routeRules: {

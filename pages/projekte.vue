@@ -25,11 +25,17 @@ import projects from "assets/scripts/projects";
     margin-top: 25vh;
     margin-bottom: 25vh;
 }
+
 h1 {
     text-transform: uppercase;
     font-size: var(--font-size-huge);
     text-align: right;
+    transform: translateY(-100%);
+    opacity: 0;
+    user-select: none;
+    animation: slide-in-from-top 1.75s var(--bezier) forwards;
 }
+
 .heading-container {
     width: 38.2vw;
     margin-bottom: calc(-1.2 * var(--font-size-huge));
