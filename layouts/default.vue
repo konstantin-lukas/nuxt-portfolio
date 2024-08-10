@@ -22,7 +22,7 @@ const menuOpen = ref(false);
 
 <style scoped lang="scss">
 main {
-    width: 100vw;
+    width: 100%;
     min-height: 100vh;
 }
 </style>

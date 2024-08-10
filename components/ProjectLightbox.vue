@@ -1,0 +1,107 @@
+<script setup lang="ts">
+
+</script>
+
+<template>
+    <div class="project-lightbox">
+        <div class="image-container">
+            <NuxtImg src="/images/projects/oslo.webp" draggable="false"/>
+        </div>
+        <div class="project-info">
+            <div>
+                <h1>Currency Input</h1>
+                <span>Jahr: 2021 | Kontext: Hobbyprojekt | Art: Library</span>
+                <h2>Über das Projekt</h2>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. A accusamus beatae culpa ducimus eligendi esse
+                    ipsa iusto nam sunt vel! Autem, doloribus, et. Amet architecto, beatae commodi eaque impedit officia.
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. A accusamus beatae culpa ducimus eligendi esse
+                    ipsa iusto nam sunt vel! Autem, doloribus, et. Amet architecto, beatae commodi eaque impedit officia.
+                </p>
+                <div class="links">
+                    <ButtonLink>
+                        GitHub
+                    </ButtonLink>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<style scoped lang="scss">
+.project-lightbox {
+    width: 100%;
+    height: 100%;
+    background: var(--white);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    overflow: hidden;
+    .image-container {
+        width: 50%;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+        img {
+            position: absolute;
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            user-select: none;
+        }
+    }
+    .project-info {
+        width: 50%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        & > div {
+            padding: 3vw 5vw;
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex: 0 1 auto;
+            flex-direction: column;
+            align-items: flex-start;
+            margin: auto 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        h1 {
+            font-size: var(--font-size-large);
+            text-transform: uppercase;
+            position: relative;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+            & + span {
+                color: var(--gray50);
+                font-size: var(--font-size-small);
+            }
+            &::after {
+                position: absolute;
+                width: 50vw;
+                height: var(--border-width);
+                background: var(--gray66);
+                top: 100%;
+                left: 0;
+                content: "";
+            }
+        }
+        h2 {
+            margin-top: 1em;
+            font-size: var(--font-size-medium);
+        }
+        p {
+            font-size: var(--font-size-small);
+            margin-bottom: 2rem;
+            color: var(--gray50);
+        }
+        .links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem 2rem;
+        }
+    }
+}
+</style>

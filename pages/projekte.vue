@@ -54,11 +54,13 @@ onBeforeUnmount(() => {
             </svg>
         </div>
     </div>
+    <ProjectLightbox/>
 </template>
 
 <style scoped lang="scss">
 .container {
-    max-width: 100vw;
+    width: 100%;
+    overflow: hidden;
     margin-top: 25vh;
 }
 

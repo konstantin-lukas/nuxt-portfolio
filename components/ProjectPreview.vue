@@ -33,7 +33,7 @@ onBeforeUnmount(() => {
             <slot/>
         </h2>
         <button class="image-container">
-            <NuxtImg :src="`/images/projects/${name}.webp`"/>
+            <NuxtImg :src="`/images/projects/${name}.webp`" draggable="false"/>
         </button>
     </div>
 </template>
@@ -61,6 +61,7 @@ onBeforeUnmount(() => {
             left: 50%;
             transform: translate(-50%, -50%);
             @include transition(transform, 500ms);
+            user-select: none;
         }
         &:hover img {
             transform: translate(-50%, -50%) scale(1.1);
