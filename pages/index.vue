@@ -14,6 +14,7 @@ useHead({
             Projekte
         </ButtonLink>
     </div>
+    <JengaTower/>
 </template>
 
 <style scoped lang="scss">
