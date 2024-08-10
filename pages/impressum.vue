@@ -18,10 +18,12 @@
         <h2>Kontakt</h2>
         <p>
             Telefon: +4915209452942<br>
-            E-Mail: <a
-                href="mailto:kontakt@konstantinlukas.de"
+            E-Mail: <NuxtLink
+                to="mailto:kontakt@konstantinlukas.de"
                 class="inline-link"
-            >kontakt@konstantinlukas.de</a>
+            >
+                kontakt@konstantinlukas.de
+            </NuxtLink>
         </p>
 
         <h3>Haftung f&uuml;r Inhalte</h3> <p>
@@ -63,7 +65,11 @@
             von Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.
         </p>
 
-        <p>Quelle: <a class="inline-link" href="https://www.e-recht24.de">https://www.e-recht24.de</a></p>
+        <p>
+            Quelle: <NuxtLink class="inline-link" to="https://www.e-recht24.de" target="_blank">
+                https://www.e-recht24.de
+            </NuxtLink>
+        </p>
     </NuxtLayout>
 </template>
 

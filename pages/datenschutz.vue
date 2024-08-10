@@ -79,10 +79,13 @@
 
         <p>
             Telefon: +4915209452942<br>
-            E-Mail: <a
-                href="mailto:kontakt@konstantinlukas.de"
+            E-Mail: <NuxtLink
+                to="mailto:kontakt@konstantinlukas.de"
                 class="inline-link"
-            >kontakt@konstantinlukas.de</a>
+                target="_blank"
+            >
+                kontakt@konstantinlukas.de
+            </NuxtLink>
         </p>
         <p>
             Verantwortliche Stelle ist die nat&uuml;rliche oder juristische Person, die allein oder gemeinsam mit
@@ -253,7 +256,11 @@
             Ihres Anliegens). Zwingende gesetzliche Bestimmungen &ndash; insbesondere gesetzliche
             Aufbewahrungsfristen &ndash; bleiben unber&uuml;hrt.
         </p>
-        <p>Quelle: <a href="https://www.e-recht24.de" class="inline-link">https://www.e-recht24.de</a></p>
+        <p>
+            Quelle: <NuxtLink to="https://www.e-recht24.de" class="inline-link" target="_blank">
+                https://www.e-recht24.de
+            </NuxtLink>
+        </p>
     </NuxtLayout>
 </template>
 
