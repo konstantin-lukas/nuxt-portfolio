@@ -53,24 +53,25 @@ watch(inView, () => {
     });
 });
 function onBeforeEnter() {
-    const isChromium = !!(window as any).chrome;
-    if (!isChromium) return;
     const scrollBarWidth = window.innerWidth - document.body.clientWidth;
-    document.body.style.overflow = "hidden";
-    document.body.style.paddingRight = `${scrollBarWidth}px`;
-    const menuButton = document.getElementById("menu-button");
-    if (menuButton) {
-        menuButton.style.marginRight = `${scrollBarWidth}px`;
+    if (scrollBarWidth > 0) {
+        document.body.style.overflow = "hidden";
+        document.body.style.paddingRight = `${scrollBarWidth}px`;
+        const menuButton = document.getElementById("menu-button");
+        if (menuButton) {
+            menuButton.style.marginRight = `${scrollBarWidth}px`;
+        }
     }
 }
 function onAfterLeave() {
-    const isChromium = !!(window as any).chrome;
-    if (!isChromium) return;
-    document.body.style.paddingRight = "0";
-    document.body.style.overflow = "auto";
-    const menuButton = document.getElementById("menu-button");
-    if (menuButton) {
-        menuButton.style.marginRight = "0";
+    const scrollBarWidth = window.innerWidth - document.body.clientWidth;
+    if (scrollBarWidth > 0) {
+        document.body.style.paddingRight = "0";
+        document.body.style.overflow = "auto";
+        const menuButton = document.getElementById("menu-button");
+        if (menuButton) {
+            menuButton.style.marginRight = "0";
+        }
     }
 }
 let observer: IntersectionObserver;
