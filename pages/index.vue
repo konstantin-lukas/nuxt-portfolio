@@ -1,5 +1,13 @@
 <script setup lang="ts">
-
+useHead({
+    title: "Konstantin Lukas | Full-Stack Developer",
+    meta: [
+        {
+            name: "description",
+            content: "Ich bin Konstantin Lukas, Full-Stack Entwickler und ausgebildeter Mediengestalter Digital & Print",
+        },
+    ],
+});
 </script>
 
 <template>

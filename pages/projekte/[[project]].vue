@@ -11,6 +11,23 @@ if (route.params.project !== "" && typeof initialProject === "undefined") {
         statusMessage: "Project not found.",
     });
 }
+
+const defaultProjectName = "Projekte";
+const defaultProjectDescription = "Hier findest du einige meiner Programmierprojekte aus meiner Ausbildung, Arbeit, "
+    + "Freizeit oder Studium.";
+
+useHead({
+    title: `${initialProject ? initialProject.title : defaultProjectName} | Konstantin Lukas`,
+    meta: [
+        {
+            name: "description",
+            content: initialProject
+                ? initialProject.about
+                : defaultProjectDescription,
+        },
+    ],
+});
+
 const selectedProject = ref<Project | null>(initialProject ?? null);
 
 watch(selectedProject, () => {
@@ -18,6 +35,11 @@ watch(selectedProject, () => {
     const projectPath = (projectName !== "" ? `/${projectName}` : "");
     const url = `/projekte${projectPath}`;
     window.history.replaceState({}, "", url);
+    if (projectName === "") {
+        document.title = `${defaultProjectName} | Konstantin Lukas`;
+    } else {
+        document.title = `${selectedProject.value?.title} | Konstantin Lukas`;
+    }
 });
 
 const eop = ref<Element | null>(null);
@@ -83,10 +105,11 @@ onBeforeUnmount(() => {
         </div>
         <div>
             <ProjectPreview
-                v-for="project in projects"
+                v-for="(project, index) in projects"
                 :key="project.name"
                 :name="project.name"
                 @select-project="name => selectedProject = projects.find((proj) => proj.name === name) ?? null"
+                :style="{ zIndex: projects.length - index }"
             >
                 {{ project.title }}
             </ProjectPreview>

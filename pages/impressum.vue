@@ -1,5 +1,7 @@
 <script setup lang="ts">
-
+useHead({
+    title: "Impressum | Konstantin Lukas",
+});
 </script>
 
 <template>
