@@ -19,6 +19,7 @@ a {
     padding: 0.2em 1em 0.1em 1em;
     display: inline-block;
     border-radius: .55em;
+    cursor: pointer;
     &::after {
         content: "";
         width: calc(100% + 2px);
