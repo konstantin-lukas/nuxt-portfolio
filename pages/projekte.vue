@@ -14,7 +14,7 @@ watch(inView, () => {
         duration: 1500,
     });
 });
-const onBeforeEnter = () => {
+function onBeforeEnter() {
     const isChromium = !!(window as any).chrome;
     if (!isChromium) return;
     document.body.style.overflow = "hidden";
@@ -24,11 +24,11 @@ const onBeforeEnter = () => {
         menuButton.style.marginRight = "12px";
     }
 }
-const onAfterLeave = () => {
+function onAfterLeave() {
     const isChromium = !!(window as any).chrome;
     if (!isChromium) return;
-    document.body.style.paddingRight = '0';
-    document.body.style.overflow = 'auto';
+    document.body.style.paddingRight = "0";
+    document.body.style.overflow = "auto";
     const menuButton = document.getElementById("menu-button");
     if (menuButton) {
         menuButton.style.marginRight = "0";
@@ -61,7 +61,7 @@ onBeforeUnmount(() => {
                 v-for="project in projects"
                 :key="project.name"
                 :name="project.name"
-                @select-project="name => selectedProject = projects.find((proj) => proj.name === project.name) ?? null"
+                @select-project="name => selectedProject = projects.find((proj) => proj.name === name) ?? null"
             >
                 {{ project.title }}
             </ProjectPreview>
