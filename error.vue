@@ -1,4 +1,8 @@
 <script setup lang="ts">
+useHead({
+    title: "Error 404 | Konstantin Lukas",
+});
+
 function getRndInteger(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
