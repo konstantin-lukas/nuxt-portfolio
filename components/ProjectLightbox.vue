@@ -90,7 +90,7 @@ defineEmits<{
             }
             &::after {
                 position: absolute;
-                width: 50vw;
+                width: 100vw;
                 height: var(--border-width);
                 background: var(--gray66);
                 top: 100%;
@@ -111,6 +111,39 @@ defineEmits<{
             display: flex;
             flex-wrap: wrap;
             gap: 1.5rem 2rem;
+        }
+    }
+}
+
+@media (max-width: 800px) {
+    .project-lightbox {
+        .project-info {
+            & > div {
+                padding: 12vw 6vw;
+            }
+        }
+    }
+}
+
+@media (orientation: portrait) {
+    .project-lightbox {
+        flex-direction: column;
+        .image-container {
+            width: 100%;
+            height: 50%;
+        }
+        .project-info {
+            width: 100%;
+            height: 50%;
+        }
+    }
+    @media (max-width: 800px) {
+        .project-lightbox {
+            .project-info {
+                & > div {
+                    padding: 10vw;
+                }
+            }
         }
     }
 }
