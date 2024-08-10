@@ -104,18 +104,15 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped lang="scss">
-.fade-enter-from,
-.fade-leave-to {
+.fade-enter-from, .fade-leave-to {
     opacity: 0;
 }
 
-.fade-enter-to,
-.fade-leave-from {
+.fade-enter-to, .fade-leave-from {
     opacity: 1;
 }
 
-.fade-enter-active,
-.fade-leave-active {
+.fade-enter-active, .fade-leave-active {
     transition: all 200ms linear;
 }
 

@@ -40,14 +40,6 @@ defineEmits<{
 
 <style scoped lang="scss">
 .project-lightbox {
-    .v-enter-active,
-    .v-leave-active {
-      transition: opacity 0.5s ease;
-    }
-    .v-enter-from,
-    .v-leave-to {
-      opacity: 0;
-    }
     width: 100%;
     height: 100%;
     background: var(--white);

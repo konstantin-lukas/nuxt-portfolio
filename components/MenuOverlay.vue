@@ -61,7 +61,6 @@ const route = useRoute();
     right: 0;
     z-index: 100;
     user-select: none;
-
     &.open {
         width: 100vw;
         height: 100vh;
@@ -74,7 +73,6 @@ const route = useRoute();
             border-width: var(--border-width);
         }
     }
-
     & > nav {
         position: absolute;
         width: 100%;
@@ -84,7 +82,6 @@ const route = useRoute();
         opacity: 0;
         transition: opacity .2s cubic-bezier(0, .5, .5, 1) .4s;
     }
-
     .menu-background {
         position: absolute;
         background-color: white;
