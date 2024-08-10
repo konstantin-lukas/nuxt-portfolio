@@ -1,6 +1,7 @@
 <script setup lang="ts">
 defineEmits(["navigation"]);
 const route = useRoute();
+const path = route.path;
 </script>
 
 <template>
@@ -11,7 +12,7 @@ const route = useRoute();
                 <NuxtLink
                     to="/"
                     class="home"
-                    :class="{ current: route.name === 'index' }"
+                    :class="{ current: path === '/' }"
                     @click="$emit('navigation')"
                 >
                     Home
@@ -19,7 +20,7 @@ const route = useRoute();
                 <NuxtLink
                     to="/projekte"
                     class="projects"
-                    :class="{ current: route.name === 'projekte' }"
+                    :class="{ current: path.startsWith('/projekte') }"
                     @click="$emit('navigation')"
                 >
                     Projekte

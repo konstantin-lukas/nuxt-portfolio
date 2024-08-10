@@ -3,7 +3,16 @@ import projects from "assets/scripts/projects";
 import anime from "animejs";
 import type { Project } from "assets/scripts/types";
 
-const selectedProject = ref<Project | null>(null);
+const route = useRoute();
+const initialProject = projects.find(proj => proj.name === route.params.project);
+if (route.params.project !== "" && typeof initialProject === "undefined") {
+    throw createError({
+        statusCode: 404,
+        statusMessage: "Project not found.",
+    });
+}
+
+const selectedProject = ref<Project | null>(initialProject ?? null);
 const eop = ref<Element | null>(null);
 const inView = ref(false);
 watch(inView, () => {
@@ -53,6 +62,15 @@ onBeforeUnmount(() => {
 
 <template>
     <div class="container">
+        <Transition
+            name="fade"
+            @before-enter="onBeforeEnter"
+            @after-leave="onAfterLeave"
+        >
+            <div v-if="selectedProject !== null" class="project-lightbox">
+                <ProjectLightbox :project="selectedProject" @go-back="selectedProject = null"/>
+            </div>
+        </Transition>
         <div class="heading-container">
             <h1>Projekte</h1>
         </div>
@@ -76,15 +94,6 @@ onBeforeUnmount(() => {
             </svg>
         </div>
     </div>
-    <Transition
-        name="fade"
-        @before-enter="onBeforeEnter"
-        @after-leave="onAfterLeave"
-    >
-        <div v-if="selectedProject !== null" >
-            <ProjectLightbox :project="selectedProject" @go-back="selectedProject = null"/>
-        </div>
-    </Transition>
 </template>
 
 <style scoped lang="scss">
@@ -106,6 +115,15 @@ onBeforeUnmount(() => {
 .container {
     width: 100%;
     margin-top: 25vh;
+    position: relative;
+    z-index: 0;
+    & > *:not(.project-lightbox) {
+        z-index: -1;
+        position: relative;
+    }
+    & > .project-lightbox {
+        z-index: 1;
+    }
 }
 
 h1 {
