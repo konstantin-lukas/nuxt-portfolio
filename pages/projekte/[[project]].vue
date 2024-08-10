@@ -11,8 +11,15 @@ if (route.params.project !== "" && typeof initialProject === "undefined") {
         statusMessage: "Project not found.",
     });
 }
-
 const selectedProject = ref<Project | null>(initialProject ?? null);
+
+watch(selectedProject, () => {
+    const projectName = selectedProject.value?.name ?? "";
+    const projectPath = (projectName !== "" ? `/${projectName}` : "");
+    const url = `/projekte${projectPath}`;
+    window.history.replaceState({}, "", url);
+});
+
 const eop = ref<Element | null>(null);
 const inView = ref(false);
 watch(inView, () => {

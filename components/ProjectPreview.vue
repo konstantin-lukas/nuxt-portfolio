@@ -33,7 +33,7 @@ onBeforeUnmount(() => {
         <h2 class="title">
             <slot/>
         </h2>
-        <button class="image-container" @click="$emit('selectProject', name)">
+        <button class="image-container" role="link" @click="$emit('selectProject', name)">
             <NuxtImg :src="`/images/projects/${name}.webp`" draggable="false"/>
         </button>
     </div>
