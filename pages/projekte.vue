@@ -1,7 +1,16 @@
 <script setup lang="ts">
 import projects from "assets/scripts/projects";
 import anime from "animejs";
+import type { Project } from "assets/scripts/types";
 
+const selectedProject = ref<Project | null>(null);
+watch(selectedProject, () => {
+    if (selectedProject.value) {
+        document.body.style.overflow = "hidden";
+    } else {
+        document.body.style.overflow = "auto";
+    }
+});
 const eop = ref<Element | null>(null);
 const inView = ref(false);
 watch(inView, () => {
@@ -40,6 +49,7 @@ onBeforeUnmount(() => {
                 v-for="project in projects"
                 :key="project.name"
                 :name="project.name"
+                @select-project="name => selectedProject = projects.find((proj) => proj.name === project.name) ?? null"
             >
                 {{ project.title }}
             </ProjectPreview>
@@ -54,13 +64,31 @@ onBeforeUnmount(() => {
             </svg>
         </div>
     </div>
-    <ProjectLightbox/>
+    <Transition name="fade">
+        <div v-if="selectedProject !== null" >
+            <ProjectLightbox :project="selectedProject" @go-back="selectedProject = null"/>
+        </div>
+    </Transition>
 </template>
 
 <style scoped lang="scss">
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+    opacity: 1;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: all 200ms linear;
+}
+
 .container {
     width: 100%;
-    overflow: hidden;
     margin-top: 25vh;
 }
 

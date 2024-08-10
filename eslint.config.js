@@ -9,6 +9,7 @@ export default antfu({
     },
     rules: {
         "antfu/if-newline": "off",
+        "style/brace-style": ["error", "1tbs", { allowSingleLine: true }],
     },
     typescript: true,
     vue: {

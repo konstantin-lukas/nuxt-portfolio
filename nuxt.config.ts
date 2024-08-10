@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     modules: ["@nuxt/fonts", "@nuxt/image"],
     routeRules: {
         "/": { prerender: true },
+        "/projekte": { prerender: true },
     },
     fonts: {
         families: [{

@@ -1,9 +1,11 @@
-const projects = [
+import type { Project } from "assets/scripts/types";
+
+const projects: Project[] = [
     {
         name: "zitatsuchmaschine",
         title: "Zitatsuchmaschine",
         year: 2024,
-        context: "SHK (Humboldt-Universität zu Berlin)",
+        context: "SHK (HU zu Berlin)",
         type: "Webseite",
         about:
             "Die Zitatsuchmaschine wurde am Lehrstuhl für Maschinelles Lernen der Humboldt-Universität zu Berlin "

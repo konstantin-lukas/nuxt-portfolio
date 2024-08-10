@@ -1,10 +1,11 @@
 <script setup lang="ts">
-defineProps({
-    name: {
-        required: true,
-        type: String,
-    },
-});
+defineProps<{
+    name: string;
+}>();
+defineEmits<{
+    (e: "selectProject", name: string): void;
+}>();
+
 const target = ref<Element | null>(null);
 const inView = ref(false);
 let observer: IntersectionObserver;
@@ -32,7 +33,7 @@ onBeforeUnmount(() => {
         <h2 class="title">
             <slot/>
         </h2>
-        <button class="image-container">
+        <button class="image-container" @click="$emit('selectProject', name)">
             <NuxtImg :src="`/images/projects/${name}.webp`" draggable="false"/>
         </button>
     </div>

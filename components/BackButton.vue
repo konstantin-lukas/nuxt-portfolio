@@ -42,21 +42,34 @@ const backAnim = function (path: string, targets: NodeList) {
 </template>
 
 <style scoped lang="scss">
-svg {
+button {
     width: 2rem;
     height: 2rem;
+    padding-right: 5px;
+    box-sizing: border-box;
     position: absolute;
     left: 2rem;
     top: 2rem;
+    z-index: 2;
+}
+svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
     cursor: pointer;
     &:first-of-type {
-        left: calc(2rem + 5px);
+        transform: translate(calc(-50% + 5px), -50%);
         polygon {
             fill: var(--pink);
+            filter: drop-shadow( 0 0 30px rgba(0, 0, 0, .15));
         }
     }
     &:last-of-type polygon {
         fill: var(--white);
+        filter: drop-shadow( 0 0 30px rgba(0, 0, 0, .15));
     }
 }
 </style>

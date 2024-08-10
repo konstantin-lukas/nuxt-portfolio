@@ -1,31 +1,40 @@
 <script setup lang="ts">
+import type { Project } from "~/assets/scripts/types";
 
+defineProps<{
+    project: Project;
+}>();
+defineEmits<{
+    (e: "goBack"): void;
+}>();
 </script>
 
 <template>
     <div class="project-lightbox">
         <div class="image-container">
-            <NuxtImg src="/images/projects/oslo.webp" draggable="false"/>
+            <NuxtImg :src="`/images/projects/${project.name}.webp`" draggable="false"/>
         </div>
         <div class="project-info">
             <div>
-                <h1>Currency Input</h1>
-                <span>Jahr: 2021 | Kontext: Hobbyprojekt | Art: Library</span>
+                <h1>{{ project.title }}</h1>
+                <span>Jahr: {{ project.year }} | Kontext: {{ project.context }} | Art: {{ project.type }}</span>
                 <h2>Über das Projekt</h2>
                 <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. A accusamus beatae culpa ducimus eligendi esse
-                    ipsa iusto nam sunt vel! Autem, doloribus, et. Amet architecto, beatae commodi eaque impedit officia.
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. A accusamus beatae culpa ducimus eligendi esse
-                    ipsa iusto nam sunt vel! Autem, doloribus, et. Amet architecto, beatae commodi eaque impedit officia.
+                    {{ project.about }}
                 </p>
                 <div class="links">
-                    <ButtonLink>
-                        GitHub
+                    <ButtonLink
+                        v-for="(link, index) in project.links"
+                        :key="index"
+                        :to="link.url"
+                        target="_blank"
+                    >
+                        {{ link.text }}
                     </ButtonLink>
                 </div>
             </div>
         </div>
-        <BackButton/>
+        <BackButton @click="$emit('goBack')"/>
     </div>
 </template>
 
@@ -90,7 +99,7 @@
             }
         }
         h2 {
-            margin-top: 1em;
+            margin-top: 1.2em;
             font-size: var(--font-size-medium);
         }
         p {
