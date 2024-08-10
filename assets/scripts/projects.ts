@@ -4,6 +4,7 @@ const projects = [
         title: "Zitatsuchmaschine",
         year: 2024,
         context: "SHK (Humboldt-Universität zu Berlin)",
+        type: "Webseite",
         about:
             "Die Zitatsuchmaschine wurde am Lehrstuhl für Maschinelles Lernen der Humboldt-Universität zu Berlin "
             + "entwickelt. Ich war allein verantwortlich für die Neugestaltung und Implementierung der Webseite. Die "
@@ -21,6 +22,7 @@ const projects = [
         title: "Oslo",
         year: 2020,
         context: "Hobbyprojekt",
+        type: "Desktop-App",
         about:
             "Oslo ist eine Electron-App für die persönliche Finanzverwaltung. "
             + "Ursprünglich habe ich dieses Programm in Python geschrieben, "
@@ -38,6 +40,7 @@ const projects = [
         title: "Anzol",
         year: 2024,
         context: "Hobbyprojekt",
+        type: "Library",
         about:
             "Anzol ist eine Library für React, die Hooks bereitstellt, mit denen man kürzeren und verständlicheren"
             + "Code schreiben kann. Das GitHub-Repository beinhaltet CI/CD für GitHub-Releases, Releases auf NPM und "
@@ -54,6 +57,7 @@ const projects = [
         title: "Nox",
         year: 2020,
         context: "Ausbildung",
+        type: "Webseite",
         about:
             "Nox ist eine junge Metal-Band aus Berlin. "
             + "Ich habe ihr Logo gestaltet und ihren Webauftritt implementiert. "
@@ -71,6 +75,7 @@ const projects = [
         title: "Currency Input",
         year: 2021,
         context: "Hobbyprojekt",
+        type: "Library",
         about:
             "Hierbei handelt es sich um eine in TypeScript geschriebene Library, "
             + "die sich an einen normalen Text-Input hängt und diesen so manipuliert, "
@@ -87,6 +92,7 @@ const projects = [
         title: "Untitled Ghost Game",
         year: 2023,
         context: "Freizeit & Uni",
+        type: "Videospiel",
         about:
             "Das hier ist ein kleines Spiel in dem man Geister mit seiner Taschenlampe bekämpft. "
             + "Wobei das Wort \"klein\" nicht ganz zutrifft, denn das Spiel ist ohne ein richtiges "
