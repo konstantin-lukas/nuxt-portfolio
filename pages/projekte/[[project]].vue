@@ -108,8 +108,8 @@ onBeforeUnmount(() => {
                 v-for="(project, index) in projects"
                 :key="project.name"
                 :name="project.name"
-                @select-project="name => selectedProject = projects.find((proj) => proj.name === name) ?? null"
                 :style="{ zIndex: projects.length - index }"
+                @select-project="name => selectedProject = projects.find((proj) => proj.name === name) ?? null"
             >
                 {{ project.title }}
             </ProjectPreview>
@@ -188,6 +188,23 @@ h1 {
         polyline {
             stroke-dashoffset: 260px;
             stroke-dasharray: 260px;
+        }
+    }
+}
+
+@media (max-width: 660px) {
+    .heading-container {
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 0;
+        padding: 0 10vw;
+        h1 {
+            width: 100%;
+            margin: 0 0 1em 0;
+            text-align: initial;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
     }
 }

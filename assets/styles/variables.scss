@@ -4,11 +4,49 @@
     --gray50: #808080;
     --gray66: #a8a8a8;
     --pink: #ff2977;
-    --font-size-root: 16px;
-    --font-size-huge: 97px;
-    --font-size-large: 52px;
-    --font-size-medium: 40px;
-    --font-size-small: 21px;
+    --font-size-root-static: 16px;
+    --font-size-huge-static: 97px;
+    --font-size-large-static: 52px;
+    --font-size-medium-static: 40px;
+    --font-size-small-static: 21px;
+    --font-size-root: var(--font-size-root-static);
+    --font-size-huge: var(--font-size-huge-static);
+    --font-size-large: var(--font-size-large-static);
+    --font-size-medium: var(--font-size-medium-static);
+    --font-size-small: var(--font-size-small-static);
     --border-width: 2px;
     --bezier: cubic-bezier(0, .5, 0, 1);
+}
+
+@media (max-width: 1440px) {
+    :root {
+        --font-size-root: 16px;
+        --font-size-huge: calc(var(--font-size-huge-static) * 0.75);
+        --font-size-large: calc(var(--font-size-large-static) * 0.75);
+        --font-size-medium: calc(var(--font-size-medium-static) * 0.75);
+    }
+}
+
+@media (max-width: 1000px) {
+    :root {
+        --font-size-root: 16px;
+        --font-size-huge: calc(var(--font-size-huge-static) * 0.66);
+        --font-size-large: calc(var(--font-size-large-static) * 0.66);
+        --font-size-medium: calc(var(--font-size-medium-static) * 0.66);
+    }
+}
+
+@media (max-width: 850px) {
+    :root {
+        --font-size-root: 16px;
+        --font-size-huge: calc(var(--font-size-huge-static) * 0.5);
+        --font-size-large: calc(var(--font-size-large-static) * 0.5);
+    }
+}
+
+@media (max-width: 660px) {
+    :root {
+        --font-size-root: 16px;
+        --font-size-huge: calc(var(--font-size-huge-static) * 0.4);
+    }
 }

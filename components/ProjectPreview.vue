@@ -121,4 +121,49 @@ onBeforeUnmount(() => {
         }
     }
 }
+
+@media (max-width: 660px) {
+    .project-preview {
+        margin-top: 3rem;
+        flex-direction: column;
+        align-items: flex-end;
+        h2 {
+            background: transparent;
+            display: block;
+            width: 90vw;
+            overflow: hidden;
+            padding: 0 .5rem 0 0;
+            box-sizing: border-box;
+            margin: 0 0 .5em 0;
+            text-overflow: ellipsis;
+            &::before {
+                content: none;
+            }
+        }
+        .image-container {
+            width: 90vw;
+            height: 60vw;
+        }
+        &:nth-of-type(2n) {
+            flex-direction: column;
+            h2 {
+                transform: translateX(61.8vw);
+                padding: 0 .5rem 0 0;
+                margin: 0 0 .5em 0;
+            }
+            .image-container {
+                border-radius: 5vw 0 0 5vw;
+                transform: translateX(-100%);
+            }
+            &.in-view {
+                .image-container {
+                    animation: slide-in-from-right 1.25s var(--bezier) forwards;
+                }
+                h2 {
+                    animation: slide-in-from-left 1.25s var(--bezier) forwards;
+                }
+            }
+        }
+    }
+}
 </style>
