@@ -16,13 +16,21 @@ const prevUpdate = ref(Date.now());
 const animSpeed = 0.2;
 
 function getResetState() {
+    let w, h;
+    if (window.innerWidth < window.innerHeight) {
+        w = Math.min(window.innerWidth / 3, 270);
+        h = Math.min((w * 121) / 270, 121);
+    } else {
+        h = Math.min(window.innerHeight / 3, 121);
+        w = Math.min((h * 270) / 121, 270);
+    }
     return {
-        x: window.innerWidth / 2 - 270 / 2,
-        y: window.innerHeight / 2 - 121 / 2,
+        x: window.innerWidth / 2 - w / 2,
+        y: window.innerHeight / 2 - h / 2,
         dx: 1,
         dy: 1,
-        w: 270,
-        h: 121,
+        w,
+        h,
         color: getRGB(),
     };
 }
