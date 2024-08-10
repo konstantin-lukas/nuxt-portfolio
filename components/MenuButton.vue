@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <button>
+    <button id="menu-button">
         <span>
             <span/>
             <span/>

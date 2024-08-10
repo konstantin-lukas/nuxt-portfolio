@@ -4,13 +4,6 @@ import anime from "animejs";
 import type { Project } from "assets/scripts/types";
 
 const selectedProject = ref<Project | null>(null);
-watch(selectedProject, () => {
-    if (selectedProject.value) {
-        document.body.style.overflow = "hidden";
-    } else {
-        document.body.style.overflow = "auto";
-    }
-});
 const eop = ref<Element | null>(null);
 const inView = ref(false);
 watch(inView, () => {
@@ -21,7 +14,26 @@ watch(inView, () => {
         duration: 1500,
     });
 });
-
+const onBeforeEnter = () => {
+    const isChromium = !!(window as any).chrome;
+    if (!isChromium) return;
+    document.body.style.overflow = "hidden";
+    document.body.style.paddingRight = "12px";
+    const menuButton = document.getElementById("menu-button");
+    if (menuButton) {
+        menuButton.style.marginRight = "12px";
+    }
+}
+const onAfterLeave = () => {
+    const isChromium = !!(window as any).chrome;
+    if (!isChromium) return;
+    document.body.style.paddingRight = '0';
+    document.body.style.overflow = 'auto';
+    const menuButton = document.getElementById("menu-button");
+    if (menuButton) {
+        menuButton.style.marginRight = "0";
+    }
+}
 let observer: IntersectionObserver;
 onMounted(() => {
     observer = new IntersectionObserver((entries) => {
@@ -64,7 +76,11 @@ onBeforeUnmount(() => {
             </svg>
         </div>
     </div>
-    <Transition name="fade">
+    <Transition
+        name="fade"
+        @before-enter="onBeforeEnter"
+        @after-leave="onAfterLeave"
+    >
         <div v-if="selectedProject !== null" >
             <ProjectLightbox :project="selectedProject" @go-back="selectedProject = null"/>
         </div>
