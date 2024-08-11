@@ -5,7 +5,6 @@ import {
     Mesh,
     MeshStandardMaterial,
     OrthographicCamera,
-    PCFSoftShadowMap,
     PlaneGeometry,
     Raycaster,
     Scene,
@@ -14,7 +13,6 @@ import {
     type Vector3,
     WebGLRenderer,
 } from "three";
-// import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RoundedBoxGeometry } from "assets/scripts/rounded";
 import { Body, Box, Plane, PointToPointConstraint, Sphere, Vec3, World } from "cannon-es";
 
@@ -77,15 +75,6 @@ function addJointConstraint(position: Vec3, constrainedBody: Body) {
     world.addConstraint(jointConstraint);
 }
 
-function removeJointConstraint() {
-    world.removeConstraint(jointConstraint);
-}
-
-function moveJoint(position: Vec3) {
-    jointBody.position.copy(position);
-    jointConstraint?.update();
-}
-
 function onPointerDown(e: PointerEvent) {
     const intersection = getHitPoint(e.clientX, e.clientY, blocks);
     if (!intersection) return;
@@ -102,12 +91,15 @@ function onPointerDown(e: PointerEvent) {
 function onPointerMove(e: PointerEvent) {
     if (!isDragging.value) return;
     const hitPoint = getHitPoint(e.clientX, e.clientY, [movementPlane]);
-    if (hitPoint) moveJoint(new Vec3(...hitPoint.point));
+    if (hitPoint) {
+        jointBody.position.copy(new Vec3(...hitPoint.point));
+        jointConstraint?.update();
+    }
 }
 
 function onPointerUp() {
     isDragging.value = false;
-    removeJointConstraint();
+    world.removeConstraint(jointConstraint);
 }
 
 function initScene() {
@@ -142,7 +134,6 @@ function initScene() {
     const light = new DirectionalLight(0xFFFFFF, 1);
     light.position.set(5, 3, 1);
     light.target.position.set(0, 0, 0);
-    light.castShadow = true;
     scene.add(light);
     scene.add(light.target);
 
@@ -153,19 +144,8 @@ function initScene() {
     const ambience3 = new AmbientLight(0xFAE0A3, 0.5);
     scene.add(ambience3);
 
-    /* const lightHelper = new DirectionalLightHelper(light);
-    lightHelper.color = "#000000";
-    scene.add(lightHelper); */
-
     const renderer = new WebGLRenderer({ antialias: true });
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = PCFSoftShadowMap;
     renderer.setClearColor(0xFFFFFF, 0);
-
-    /* const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enablePan = true;
-    controls.enableZoom = true;
-    controls.update(); */
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     (sceneContainer.value as HTMLDivElement).appendChild(renderer.domElement);
@@ -179,7 +159,6 @@ function initScene() {
             blocks[i].position.copy(collisionBoxes[i].position);
             blocks[i].quaternion.copy(collisionBoxes[i].quaternion);
         }
-        // controls.update();
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
     };
@@ -192,18 +171,11 @@ function generateTower(scene: Scene) {
     const topSideTexture = textureLoader.load("/images/textures/top_side.jpg");
     const shortSideTexture = textureLoader.load("/images/textures/short_side.jpg");
     const longSideTexture = textureLoader.load("/images/textures/long_side.jpg");
-    const materialTopSide = new MeshStandardMaterial({
-        map: topSideTexture,
-    });
-    const materialShortSide = new MeshStandardMaterial({
-        map: shortSideTexture,
-    });
-    const materialLongSide = new MeshStandardMaterial({
-        map: longSideTexture,
-    });
+    const materialTopSide = new MeshStandardMaterial({ map: topSideTexture });
+    const materialShortSide = new MeshStandardMaterial({ map: shortSideTexture });
+    const materialLongSide = new MeshStandardMaterial({ map: longSideTexture });
 
     const blockShape = new Box(new Vec3(blockWidth / 2, blockHeight / 2, blockDepth / 2));
-
     const _blocks = [];
     const _collisionBoxes = [];
     let stackHeight = 0;
@@ -220,15 +192,12 @@ function generateTower(scene: Scene) {
                 materialShortSide,
             ]);
             block.position.set((j - 1) * blockWidth + previousRandom, stackHeight * 1.1, 0);
-            block.castShadow = true;
-            block.receiveShadow = true;
 
             if (i % 2 === 0) {
                 block.rotation.y = Math.PI / 2;
                 block.position.set(0, stackHeight * 1.1, (j - 1) * blockWidth + previousRandom);
             }
 
-            // Create CANNON body
             const blockBody = new Body({
                 mass: 5,
                 position: new Vec3(block.position.x, block.position.y, block.position.z),
