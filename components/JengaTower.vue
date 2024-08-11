@@ -29,6 +29,15 @@ const planeGeometry = new PlaneGeometry(100, 100);
 const movementPlane = new Mesh(planeGeometry);
 movementPlane.visible = false;
 
+const lights = [
+    new DirectionalLight(0xFFFFFF, 1),
+    new AmbientLight(0xFFFFFF, 1),
+    new AmbientLight(0xFAE0A3, 1),
+    new AmbientLight(0xFAE0A3, 0.5),
+];
+lights[0].position.set(5, 3, 1);
+(lights[0] as DirectionalLight).target.position.set(0, 0, 0);
+
 const blockWidth = 2.5;
 const blockHeight = 1.5;
 const blockDepth = 7.5;
@@ -36,6 +45,9 @@ const layers = 14;
 
 const world = new World();
 world.gravity.set(0, -30, 0);
+
+let scene = new Scene();
+scene.add(movementPlane);
 
 const groundBody = new Body({
     type: Body.STATIC,
@@ -51,6 +63,19 @@ jointBody.collisionFilterMask = 0;
 world.addBody(jointBody);
 groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(groundBody);
+
+const renderer = new WebGLRenderer({ antialias: true });
+renderer.setClearColor(0xFFFFFF, 0);
+
+const geometry = new RoundedBoxGeometry(blockWidth, blockHeight, blockDepth, 2, 0.1);
+const textureLoader = new TextureLoader();
+const topSideTexture = textureLoader.load("/images/textures/top_side.jpg");
+const shortSideTexture = textureLoader.load("/images/textures/short_side.jpg");
+const longSideTexture = textureLoader.load("/images/textures/long_side.jpg");
+const materialTopSide = new MeshStandardMaterial({ map: topSideTexture });
+const materialShortSide = new MeshStandardMaterial({ map: shortSideTexture });
+const materialLongSide = new MeshStandardMaterial({ map: longSideTexture });
+const blockShape = new Box(new Vec3(blockWidth / 2, blockHeight / 2, blockDepth / 2));
 
 function getHitPoint(clientX: number, clientY: number, meshes: Mesh[]) {
     const mouse = new Vector2();
@@ -106,15 +131,15 @@ function initScene() {
     if (sceneContainer.value === null) return;
     collisionBoxes.forEach(box => world.removeBody(box));
     collisionBoxes = [];
+    blocks.forEach(block => scene.remove(block));
     blocks = [];
+    lights.forEach(l => scene.add(l));
     restart.value = false;
 
     (sceneContainer.value as HTMLDivElement).innerHTML = "";
-    const scene = new Scene();
-    scene.add(movementPlane);
 
     const aspect = window.innerWidth / window.innerHeight;
-    const cameraSize = 20;
+    const cameraSize = window.innerWidth > 600 ? 20 : 30;
     camera = new OrthographicCamera(
         -cameraSize * aspect,
         cameraSize * aspect,
@@ -131,21 +156,7 @@ function initScene() {
     camera.translateX(-horizontalThird - blockWidth);
     camera.translateY(verticalThird - (blockHeight * layers) / 6);
 
-    const light = new DirectionalLight(0xFFFFFF, 1);
-    light.position.set(5, 3, 1);
-    light.target.position.set(0, 0, 0);
-    scene.add(light);
-    scene.add(light.target);
-
-    const ambience1 = new AmbientLight(0xFFFFFF, 1);
-    scene.add(ambience1);
-    const ambience2 = new AmbientLight(0xFAE0A3, 1);
-    scene.add(ambience2);
-    const ambience3 = new AmbientLight(0xFAE0A3, 0.5);
-    scene.add(ambience3);
-
-    const renderer = new WebGLRenderer({ antialias: true });
-    renderer.setClearColor(0xFFFFFF, 0);
+    lights.forEach(l => scene.add(l));
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     (sceneContainer.value as HTMLDivElement).appendChild(renderer.domElement);
@@ -166,18 +177,6 @@ function initScene() {
 }
 
 function generateTower(scene: Scene) {
-    const geometry = new RoundedBoxGeometry(blockWidth, blockHeight, blockDepth, 2, 0.1);
-    const textureLoader = new TextureLoader();
-    const topSideTexture = textureLoader.load("/images/textures/top_side.jpg");
-    const shortSideTexture = textureLoader.load("/images/textures/short_side.jpg");
-    const longSideTexture = textureLoader.load("/images/textures/long_side.jpg");
-    const materialTopSide = new MeshStandardMaterial({ map: topSideTexture });
-    const materialShortSide = new MeshStandardMaterial({ map: shortSideTexture });
-    const materialLongSide = new MeshStandardMaterial({ map: longSideTexture });
-
-    const blockShape = new Box(new Vec3(blockWidth / 2, blockHeight / 2, blockDepth / 2));
-    const _blocks = [];
-    const _collisionBoxes = [];
     let stackHeight = 0;
     for (let i = 0; i < layers; i++) {
         let previousRandom = 0;
@@ -205,15 +204,13 @@ function generateTower(scene: Scene) {
             });
             blockBody.quaternion.setFromAxisAngle(new Vec3(0, 1, 0), block.rotation.y);
             world.addBody(blockBody);
-            _collisionBoxes.push(blockBody);
+            collisionBoxes.push(blockBody);
 
-            _blocks.push(block);
+            blocks.push(block);
             scene.add(block);
         }
         stackHeight += blockHeight;
     }
-    blocks = _blocks;
-    collisionBoxes = _collisionBoxes;
 }
 
 function resetAnimation() {
