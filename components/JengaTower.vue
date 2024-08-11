@@ -37,12 +37,12 @@ function initScene() {
         1000,
     );
 
-    const horizontalThird = (2 * cameraSize * aspect) / 6;
-    const verticalThird = (2 * cameraSize) / 3;
-    camera.position.set(20, 25, 10);
-    camera.lookAt(0, 10, 0);
-    camera.translateX(-horizontalThird);
-    camera.translateY(verticalThird - blockHeight * (18 - 2) / 2);
+    const horizontalThird = (cameraSize * aspect) / 3;
+    const verticalThird = (cameraSize) / 3;
+    camera.position.set(25, layers + 7, 10);
+    camera.lookAt(0, layers - 8, 0);
+    camera.translateX(-horizontalThird - blockWidth);
+    camera.translateY(verticalThird - (blockHeight * layers) / 6);
 
     const light = new DirectionalLight(0xFFFFFF, 1);
     light.position.set(5, 3, 1);
