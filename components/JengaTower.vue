@@ -4,8 +4,6 @@ import {
     DirectionalLight,
     Mesh,
     MeshStandardMaterial,
-    type Object3D,
-    type Object3DEventMap,
     OrthographicCamera,
     PCFSoftShadowMap,
     PlaneGeometry,
@@ -13,30 +11,25 @@ import {
     Scene,
     TextureLoader,
     Vector2,
-    Vector3,
+    type Vector3,
     WebGLRenderer,
 } from "three";
 // import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RoundedBoxGeometry } from "assets/scripts/rounded";
 import { Body, Box, Plane, PointToPointConstraint, Sphere, Vec3, World } from "cannon-es";
-import PointerEvents = Property.PointerEvents;
 
 const sceneContainer = ref(null);
 const restart = ref(false);
-const heldBlock = ref(null);
 const isDragging = ref(false);
 let camera: OrthographicCamera;
 let blocks: Mesh[] = [];
-let jointBody: Body;
 let jointConstraint: PointToPointConstraint;
 let collisionBoxes: Body[] = [];
-let selectedBlock: Object3D<Object3DEventMap> | null = null;
-let selectedBody: Body | null = null;
 const raycaster = new Raycaster();
 
 const planeGeometry = new PlaneGeometry(100, 100);
 const movementPlane = new Mesh(planeGeometry);
-movementPlane.visible = false
+movementPlane.visible = false;
 
 const blockWidth = 2.5;
 const blockHeight = 1.5;
@@ -44,24 +37,24 @@ const blockDepth = 7.5;
 const layers = 14;
 
 const world = new World();
-world.gravity.set(0, -9.82, 0);
+world.gravity.set(0, -30, 0);
 
 const groundBody = new Body({
     type: Body.STATIC,
-    shape: new Plane()
+    shape: new Plane(),
 });
 
-const jointShape = new Sphere(0.1)
-jointBody = new Body({ mass: 0 })
-jointBody.addShape(jointShape)
-jointBody.collisionFilterGroup = 0
-jointBody.collisionFilterMask = 0
+const jointShape = new Sphere(0.1);
+const jointBody = new Body({ mass: 0 });
+jointBody.addShape(jointShape);
+jointBody.collisionFilterGroup = 0;
+jointBody.collisionFilterMask = 0;
 
-world.addBody(jointBody)
+world.addBody(jointBody);
 groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(groundBody);
 
-function getHitPoint(clientX: number , clientY: number, meshes: Mesh[]) {
+function getHitPoint(clientX: number, clientY: number, meshes: Mesh[]) {
     const mouse = new Vector2();
     mouse.x = (clientX / window.innerWidth) * 2 - 1;
     mouse.y = -((clientY / window.innerHeight) * 2 - 1);
@@ -126,7 +119,7 @@ function initScene() {
 
     (sceneContainer.value as HTMLDivElement).innerHTML = "";
     const scene = new Scene();
-    scene.add(movementPlane)
+    scene.add(movementPlane);
 
     const aspect = window.innerWidth / window.innerHeight;
     const cameraSize = 20;
@@ -211,7 +204,6 @@ function generateTower(scene: Scene) {
 
     const blockShape = new Box(new Vec3(blockWidth / 2, blockHeight / 2, blockDepth / 2));
 
-
     const _blocks = [];
     const _collisionBoxes = [];
     let stackHeight = 0;
@@ -229,7 +221,7 @@ function generateTower(scene: Scene) {
             ]);
             block.position.set((j - 1) * blockWidth + previousRandom, stackHeight * 1.1, 0);
             block.castShadow = true;
-            // block.receiveShadow = true;
+            block.receiveShadow = true;
 
             if (i % 2 === 0) {
                 block.rotation.y = Math.PI / 2;
@@ -240,7 +232,7 @@ function generateTower(scene: Scene) {
             const blockBody = new Body({
                 mass: 5,
                 position: new Vec3(block.position.x, block.position.y, block.position.z),
-                shape: blockShape
+                shape: blockShape,
             });
             blockBody.quaternion.setFromAxisAngle(new Vec3(0, 1, 0), block.rotation.y);
             world.addBody(blockBody);
@@ -251,8 +243,8 @@ function generateTower(scene: Scene) {
         }
         stackHeight += blockHeight;
     }
-    blocks = _blocks
-    collisionBoxes = _collisionBoxes
+    blocks = _blocks;
+    collisionBoxes = _collisionBoxes;
 }
 
 function resetAnimation() {
