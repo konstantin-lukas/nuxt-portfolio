@@ -14,6 +14,7 @@ import {
 } from "three";
 // import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RoundedBoxGeometry } from "assets/scripts/rounded";
+import { Body, Box, Plane, Vec3, World } from "cannon-es";
 
 const sceneContainer = ref(null);
 const restart = ref(false);
@@ -28,6 +29,17 @@ const blockWidth = 2.5;
 const blockHeight = 1.5;
 const blockDepth = 7.5;
 const layers = 18;
+
+const world = new World();
+world.gravity.set(0, -9.82, 0);
+
+const groundBody = new Body({
+    type: Body.STATIC,
+    shape: new Plane()
+});
+
+groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+world.addBody(groundBody);
 
 function initScene() {
     if (sceneContainer.value === null) return;
@@ -86,10 +98,15 @@ function initScene() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     (sceneContainer.value as HTMLDivElement).appendChild(renderer.domElement);
 
-    const blocks = generateTower(scene);
+    const { blocks, collisionBoxes } = generateTower(scene);
 
     const animate = () => {
         if (restart.value) return;
+        world.fixedStep();
+        for (let i = 0; i < blocks.length; i++) {
+            blocks[i].position.copy(collisionBoxes[i].position);
+            blocks[i].quaternion.copy(collisionBoxes[i].quaternion);
+        }
         raycaster.setFromCamera(mouse.value, camera);
         const intersects = raycaster.intersectObjects(blocks);
         if (intersects.length > 0) {
@@ -118,7 +135,11 @@ function generateTower(scene: Scene) {
         map: longSideTexture,
     });
 
+    const blockShape = new Box(new Vec3(blockWidth / 2, blockHeight / 2, blockDepth / 2));
+
+
     const blocks = [];
+    const collisionBoxes = [];
     let stackHeight = 0;
     for (let i = 0; i < layers; i++) {
         let previousRandom = 0;
@@ -132,20 +153,31 @@ function generateTower(scene: Scene) {
                 materialShortSide,
                 materialShortSide,
             ]);
-            block.position.set((j - 1) * blockWidth + previousRandom, stackHeight, 0);
+            block.position.set((j - 1) * blockWidth + previousRandom, stackHeight * 1.2, 0);
             block.castShadow = true;
             // block.receiveShadow = true;
 
             if (i % 2 === 0) {
                 block.rotation.y = Math.PI / 2;
-                block.position.set(0, stackHeight, (j - 1) * blockWidth + previousRandom);
+                block.position.set(0, stackHeight * 1.2, (j - 1) * blockWidth + previousRandom);
             }
+
+            // Create CANNON body
+            const blockBody = new Body({
+                mass: 5,
+                position: new Vec3(block.position.x, block.position.y, block.position.z),
+                shape: blockShape,
+            });
+            blockBody.quaternion.setFromAxisAngle(new Vec3(0, 1, 0), block.rotation.y);
+            world.addBody(blockBody);
+            collisionBoxes.push(blockBody);
+
             blocks.push(block);
             scene.add(block);
         }
         stackHeight += blockHeight;
     }
-    return blocks;
+    return { blocks, collisionBoxes };
 }
 
 function resetAnimation() {
