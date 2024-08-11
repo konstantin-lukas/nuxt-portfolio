@@ -5,7 +5,14 @@ useHead({
 </script>
 
 <template>
-    <JengaTower/>
+    <ClientOnly>
+        <JengaTower/>
+        <template #fallback>
+            <div id="load-spinner">
+                <LoadSpinner/>
+            </div>
+        </template>
+    </ClientOnly>
     <div class="container">
         <div class="heading-container">
             <h1>Konstantin Lukas</h1>
@@ -52,5 +59,11 @@ h2 {
         height: calc(23.6vh - var(--font-size-large) - var(--padding) * 2);
         top: calc(100% + var(--padding) - 0.2em);
     }
+}
+#load-spinner {
+    position: fixed;
+    top: 50%;
+    left: 66vw;
+    transform: translateY(-50%);
 }
 </style>
