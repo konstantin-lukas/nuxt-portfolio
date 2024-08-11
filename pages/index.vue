@@ -5,6 +5,7 @@ useHead({
 </script>
 
 <template>
+    <JengaTower/>
     <div class="container">
         <div class="heading-container">
             <h1>Konstantin Lukas</h1>
@@ -14,7 +15,6 @@ useHead({
             Projekte
         </ButtonLink>
     </div>
-    <JengaTower/>
 </template>
 
 <style scoped lang="scss">

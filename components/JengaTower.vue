@@ -166,7 +166,7 @@ function initScene() {
 }
 
 function generateTower(scene: Scene) {
-    const geometry = new RoundedBoxGeometry(blockWidth, blockHeight, blockDepth, 3, 0.1);
+    const geometry = new RoundedBoxGeometry(blockWidth, blockHeight, blockDepth, 2, 0.1);
     const textureLoader = new TextureLoader();
     const topSideTexture = textureLoader.load("/images/textures/top_side.jpg");
     const shortSideTexture = textureLoader.load("/images/textures/short_side.jpg");
