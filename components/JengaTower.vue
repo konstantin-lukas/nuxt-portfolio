@@ -7,6 +7,7 @@ import {
     OrthographicCamera,
     PCFSoftShadowMap,
     Scene,
+    TextureLoader,
     WebGLRenderer,
 } from "three";
 // import { OrbitControls } from "three/addons/controls/OrbitControls.js";
@@ -55,6 +56,8 @@ function initScene() {
     scene.add(ambience1);
     const ambience2 = new AmbientLight(0xFAE0A3, 1);
     scene.add(ambience2);
+    const ambience3 = new AmbientLight(0xFAE0A3, 0.5);
+    scene.add(ambience3);
 
     /* const lightHelper = new DirectionalLightHelper(light);
     lightHelper.color = "#000000";
@@ -86,17 +89,33 @@ function initScene() {
 
 function generateTower(scene: Scene) {
     const geometry = new RoundedBoxGeometry(blockWidth, blockHeight, blockDepth, 3, 0.1);
-    const material = new MeshStandardMaterial({
-        color: 0xFAE0A3,
+    const textureLoader = new TextureLoader();
+    const topSideTexture = textureLoader.load("/images/textures/top_side.jpg");
+    const shortSideTexture = textureLoader.load("/images/textures/short_side.jpg");
+    const longSideTexture = textureLoader.load("/images/textures/long_side.jpg");
+    const materialTopSide = new MeshStandardMaterial({
+        map: topSideTexture,
     });
-    // const material = new MeshToonMaterial({ color: 0xFFFFFF });
+    const materialShortSide = new MeshStandardMaterial({
+        map: shortSideTexture,
+    });
+    const materialLongSide = new MeshStandardMaterial({
+        map: longSideTexture,
+    });
 
     let stackHeight = 0;
     for (let i = 0; i < layers; i++) {
         let previousRandom = 0;
         for (let j = 0; j < 3; j++) {
-            previousRandom += Math.random() * 0.1;
-            const block = new Mesh(geometry, material);
+            previousRandom += (Math.random() - 0.5) * 0.1;
+            const block = new Mesh(geometry, [
+                materialLongSide,
+                materialLongSide,
+                materialTopSide,
+                materialTopSide,
+                materialShortSide,
+                materialShortSide,
+            ]);
             block.position.set((j - 1) * blockWidth + previousRandom, stackHeight, 0);
             block.castShadow = true;
             // block.receiveShadow = true;
