@@ -34,13 +34,21 @@ onBeforeUnmount(() => {
             <slot/>
         </h2>
         <button class="image-container" role="link" @click="$emit('selectProject', name)">
-            <NuxtImg :src="`/images/projects/${name}.webp`" draggable="false"/>
+            <NuxtImg
+                :src="`/images/projects/${name}.webp`"
+                draggable="false"
+                preload
+                sizes="xxl:733px xl:488px lg:391px md:293px sm:576px xs:288px"
+            />
         </button>
     </div>
 </template>
 
 <style scoped lang="scss">
 @import "assets/styles/mixins";
+.hidden {
+    display: none;
+}
 .project-preview {
     overflow: hidden;
     display: flex;

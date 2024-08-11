@@ -12,7 +12,11 @@ defineEmits<{
 <template>
     <div class="project-lightbox">
         <div class="image-container">
-            <NuxtImg :src="`/images/projects/${project.name}.webp`" draggable="false"/>
+            <NuxtImg
+                :src="`/images/projects/${project.name}.webp`"
+                draggable="false"
+                sizes="xxl:1080px xl:640px lg:512px md:384 sm:320 xs:160"
+            />
         </div>
         <div class="project-info">
             <div>

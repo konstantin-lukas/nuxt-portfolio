@@ -64,14 +64,11 @@ function onBeforeEnter() {
     }
 }
 function onAfterLeave() {
-    const scrollBarWidth = window.innerWidth - document.body.clientWidth;
-    if (scrollBarWidth > 0) {
-        document.body.style.paddingRight = "0";
-        document.body.style.overflow = "auto";
-        const menuButton = document.getElementById("menu-button");
-        if (menuButton) {
-            menuButton.style.marginRight = "0";
-        }
+    document.body.style.paddingRight = "0";
+    document.body.style.overflow = "auto";
+    const menuButton = document.getElementById("menu-button");
+    if (menuButton) {
+        menuButton.style.marginRight = "0";
     }
 }
 let observer: IntersectionObserver;
@@ -98,7 +95,7 @@ onBeforeUnmount(() => {
             @before-enter="onBeforeEnter"
             @after-leave="onAfterLeave"
         >
-            <div v-if="selectedProject !== null" class="project-lightbox">
+            <div v-if="selectedProject" class="project-lightbox">
                 <ProjectLightbox :project="selectedProject" @go-back="selectedProject = null"/>
             </div>
         </Transition>
@@ -107,10 +104,9 @@ onBeforeUnmount(() => {
         </div>
         <div>
             <ProjectPreview
-                v-for="(project, index) in projects"
+                v-for="project in projects"
                 :key="project.name"
                 :name="project.name"
-                :style="{ zIndex: projects.length - index }"
                 @select-project="name => selectedProject = projects.find((proj) => proj.name === name) ?? null"
             >
                 {{ project.title }}
@@ -125,6 +121,14 @@ onBeforeUnmount(() => {
                 <polyline class="cls-2" points="93.98 127.18 144.76 177.97 270.92 51.81"/>
             </svg>
         </div>
+        <NuxtImg
+            v-for="p in projects"
+            :key="p.name"
+            style="display: none;"
+            :src="`/images/projects/${p.name}.webp`"
+            draggable="false"
+            sizes="xxl:1080px xl:640px lg:512px md:384 sm:320 xs:160"
+        />
     </div>
 </template>
 
