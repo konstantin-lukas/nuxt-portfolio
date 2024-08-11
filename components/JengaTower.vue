@@ -6,8 +6,10 @@ import {
     MeshStandardMaterial,
     OrthographicCamera,
     PCFSoftShadowMap,
+    Raycaster,
     Scene,
     TextureLoader,
+    Vector2,
     WebGLRenderer,
 } from "three";
 // import { OrbitControls } from "three/addons/controls/OrbitControls.js";
@@ -15,6 +17,12 @@ import { RoundedBoxGeometry } from "assets/scripts/rounded";
 
 const sceneContainer = ref(null);
 const restart = ref(false);
+const mouse = ref(new Vector2());
+
+function trackMouse(e: MouseEvent) {
+    mouse.value.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.value.y = -(e.clientY / window.innerHeight) * 2 + 1;
+};
 
 const blockWidth = 2.5;
 const blockHeight = 1.5;
@@ -37,6 +45,8 @@ function initScene() {
         1,
         1000,
     );
+
+    const raycaster = new Raycaster();
 
     const horizontalThird = (cameraSize * aspect) / 3;
     const verticalThird = (cameraSize) / 3;
@@ -76,10 +86,15 @@ function initScene() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     (sceneContainer.value as HTMLDivElement).appendChild(renderer.domElement);
 
-    generateTower(scene);
+    const blocks = generateTower(scene);
 
     const animate = () => {
         if (restart.value) return;
+        raycaster.setFromCamera(mouse.value, camera);
+        const intersects = raycaster.intersectObjects(blocks);
+        if (intersects.length > 0) {
+            // console.log(intersects[0].object);
+        }
         // controls.update();
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
@@ -103,6 +118,7 @@ function generateTower(scene: Scene) {
         map: longSideTexture,
     });
 
+    const blocks = [];
     let stackHeight = 0;
     for (let i = 0; i < layers; i++) {
         let previousRandom = 0;
@@ -124,11 +140,12 @@ function generateTower(scene: Scene) {
                 block.rotation.y = Math.PI / 2;
                 block.position.set(0, stackHeight, (j - 1) * blockWidth + previousRandom);
             }
-
+            blocks.push(block);
             scene.add(block);
         }
         stackHeight += blockHeight;
     }
+    return blocks;
 }
 
 function resetAnimation() {
@@ -138,10 +155,12 @@ function resetAnimation() {
 
 onMounted(() => {
     initScene();
-    window.addEventListener("resize", resetAnimation);
+    window.addEventListener("resize", resetAnimation, false);
+    window.addEventListener("mousemove", trackMouse, false);
 });
 onBeforeUnmount(() => {
-    window.removeEventListener("resize", resetAnimation);
+    window.removeEventListener("resize", resetAnimation, false);
+    window.addEventListener("mousemove", trackMouse, false);
 });
 </script>
 
