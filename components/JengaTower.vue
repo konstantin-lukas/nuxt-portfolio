@@ -4,31 +4,44 @@ import {
     DirectionalLight,
     Mesh,
     MeshStandardMaterial,
+    type Object3D,
+    type Object3DEventMap,
     OrthographicCamera,
     PCFSoftShadowMap,
+    PlaneGeometry,
     Raycaster,
     Scene,
     TextureLoader,
     Vector2,
+    Vector3,
     WebGLRenderer,
 } from "three";
 // import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RoundedBoxGeometry } from "assets/scripts/rounded";
-import { Body, Box, Plane, Vec3, World } from "cannon-es";
+import { Body, Box, Plane, PointToPointConstraint, Sphere, Vec3, World } from "cannon-es";
+import PointerEvents = Property.PointerEvents;
 
 const sceneContainer = ref(null);
 const restart = ref(false);
-const mouse = ref(new Vector2());
+const heldBlock = ref(null);
+const isDragging = ref(false);
+let camera: OrthographicCamera;
+let blocks: Mesh[] = [];
+let jointBody: Body;
+let jointConstraint: PointToPointConstraint;
+let collisionBoxes: Body[] = [];
+let selectedBlock: Object3D<Object3DEventMap> | null = null;
+let selectedBody: Body | null = null;
+const raycaster = new Raycaster();
 
-function trackMouse(e: MouseEvent) {
-    mouse.value.x = (e.clientX / window.innerWidth) * 2 - 1;
-    mouse.value.y = -(e.clientY / window.innerHeight) * 2 + 1;
-};
+const planeGeometry = new PlaneGeometry(100, 100);
+const movementPlane = new Mesh(planeGeometry);
+movementPlane.visible = false
 
 const blockWidth = 2.5;
 const blockHeight = 1.5;
 const blockDepth = 7.5;
-const layers = 18;
+const layers = 14;
 
 const world = new World();
 world.gravity.set(0, -9.82, 0);
@@ -38,18 +51,86 @@ const groundBody = new Body({
     shape: new Plane()
 });
 
+const jointShape = new Sphere(0.1)
+jointBody = new Body({ mass: 0 })
+jointBody.addShape(jointShape)
+jointBody.collisionFilterGroup = 0
+jointBody.collisionFilterMask = 0
+
+world.addBody(jointBody)
 groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(groundBody);
 
+function getHitPoint(clientX: number , clientY: number, meshes: Mesh[]) {
+    const mouse = new Vector2();
+    mouse.x = (clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -((clientY / window.innerHeight) * 2 - 1);
+    raycaster.setFromCamera(mouse, camera);
+    const hits = raycaster.intersectObjects(meshes);
+    return hits.length > 0 ? hits[0] : undefined;
+}
+
+function moveMovementPlane(point: Vector3) {
+    movementPlane.position.copy(point);
+    movementPlane.quaternion.copy(camera.quaternion);
+}
+
+function addJointConstraint(position: Vec3, constrainedBody: Body) {
+    const vector = new Vec3().copy(position).vsub(constrainedBody.position);
+    const antiRotation = constrainedBody.quaternion.inverse();
+    const pivot = antiRotation.vmult(vector);
+    jointBody.position.copy(position);
+    jointConstraint = new PointToPointConstraint(constrainedBody, pivot, jointBody, new Vec3(0, 0, 0));
+    world.addConstraint(jointConstraint);
+}
+
+function removeJointConstraint() {
+    world.removeConstraint(jointConstraint);
+}
+
+function moveJoint(position: Vec3) {
+    jointBody.position.copy(position);
+    jointConstraint?.update();
+}
+
+function onPointerDown(e: PointerEvent) {
+    const intersection = getHitPoint(e.clientX, e.clientY, blocks);
+    if (!intersection) return;
+    const idx = blocks.indexOf(intersection?.object as any);
+    const hp = intersection?.point;
+    const hitPoint = new Vec3(...hp);
+    moveMovementPlane(hp);
+    addJointConstraint(hitPoint, collisionBoxes[idx]);
+    requestAnimationFrame(() => {
+        isDragging.value = true;
+    });
+}
+
+function onPointerMove(e: PointerEvent) {
+    if (!isDragging.value) return;
+    const hitPoint = getHitPoint(e.clientX, e.clientY, [movementPlane]);
+    if (hitPoint) moveJoint(new Vec3(...hitPoint.point));
+}
+
+function onPointerUp() {
+    isDragging.value = false;
+    removeJointConstraint();
+}
+
 function initScene() {
     if (sceneContainer.value === null) return;
+    collisionBoxes.forEach(box => world.removeBody(box));
+    collisionBoxes = [];
+    blocks = [];
     restart.value = false;
+
     (sceneContainer.value as HTMLDivElement).innerHTML = "";
     const scene = new Scene();
+    scene.add(movementPlane)
 
     const aspect = window.innerWidth / window.innerHeight;
     const cameraSize = 20;
-    const camera = new OrthographicCamera(
+    camera = new OrthographicCamera(
         -cameraSize * aspect,
         cameraSize * aspect,
         cameraSize,
@@ -57,8 +138,6 @@ function initScene() {
         1,
         1000,
     );
-
-    const raycaster = new Raycaster();
 
     const horizontalThird = (cameraSize * aspect) / 3;
     const verticalThird = (cameraSize) / 3;
@@ -98,7 +177,7 @@ function initScene() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     (sceneContainer.value as HTMLDivElement).appendChild(renderer.domElement);
 
-    const { blocks, collisionBoxes } = generateTower(scene);
+    generateTower(scene);
 
     const animate = () => {
         if (restart.value) return;
@@ -106,11 +185,6 @@ function initScene() {
         for (let i = 0; i < blocks.length; i++) {
             blocks[i].position.copy(collisionBoxes[i].position);
             blocks[i].quaternion.copy(collisionBoxes[i].quaternion);
-        }
-        raycaster.setFromCamera(mouse.value, camera);
-        const intersects = raycaster.intersectObjects(blocks);
-        if (intersects.length > 0) {
-            // console.log(intersects[0].object);
         }
         // controls.update();
         requestAnimationFrame(animate);
@@ -138,8 +212,8 @@ function generateTower(scene: Scene) {
     const blockShape = new Box(new Vec3(blockWidth / 2, blockHeight / 2, blockDepth / 2));
 
 
-    const blocks = [];
-    const collisionBoxes = [];
+    const _blocks = [];
+    const _collisionBoxes = [];
     let stackHeight = 0;
     for (let i = 0; i < layers; i++) {
         let previousRandom = 0;
@@ -153,31 +227,32 @@ function generateTower(scene: Scene) {
                 materialShortSide,
                 materialShortSide,
             ]);
-            block.position.set((j - 1) * blockWidth + previousRandom, stackHeight * 1.2, 0);
+            block.position.set((j - 1) * blockWidth + previousRandom, stackHeight * 1.1, 0);
             block.castShadow = true;
             // block.receiveShadow = true;
 
             if (i % 2 === 0) {
                 block.rotation.y = Math.PI / 2;
-                block.position.set(0, stackHeight * 1.2, (j - 1) * blockWidth + previousRandom);
+                block.position.set(0, stackHeight * 1.1, (j - 1) * blockWidth + previousRandom);
             }
 
             // Create CANNON body
             const blockBody = new Body({
                 mass: 5,
                 position: new Vec3(block.position.x, block.position.y, block.position.z),
-                shape: blockShape,
+                shape: blockShape
             });
             blockBody.quaternion.setFromAxisAngle(new Vec3(0, 1, 0), block.rotation.y);
             world.addBody(blockBody);
-            collisionBoxes.push(blockBody);
+            _collisionBoxes.push(blockBody);
 
-            blocks.push(block);
+            _blocks.push(block);
             scene.add(block);
         }
         stackHeight += blockHeight;
     }
-    return { blocks, collisionBoxes };
+    blocks = _blocks
+    collisionBoxes = _collisionBoxes
 }
 
 function resetAnimation() {
@@ -188,11 +263,15 @@ function resetAnimation() {
 onMounted(() => {
     initScene();
     window.addEventListener("resize", resetAnimation, false);
-    window.addEventListener("mousemove", trackMouse, false);
+    window.addEventListener("pointerdown", onPointerDown, false);
+    window.addEventListener("pointermove", onPointerMove, false);
+    window.addEventListener("pointerup", onPointerUp, false);
 });
 onBeforeUnmount(() => {
     window.removeEventListener("resize", resetAnimation, false);
-    window.addEventListener("mousemove", trackMouse, false);
+    window.removeEventListener("pointerdown", onPointerDown, false);
+    window.removeEventListener("pointermove", onPointerMove, false);
+    window.removeEventListener("pointerup", onPointerUp, false);
 });
 </script>
 
