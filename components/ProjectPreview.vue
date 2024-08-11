@@ -50,6 +50,7 @@ onBeforeUnmount(() => {
     display: none;
 }
 .project-preview {
+    pointer-events: none;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -57,6 +58,7 @@ onBeforeUnmount(() => {
     position: relative;
     margin-top: -3vw;
     .image-container {
+        pointer-events: initial;
         width: 38.2vw;
         height: 25.5vw;
         overflow: hidden;
@@ -85,6 +87,7 @@ onBeforeUnmount(() => {
         background: var(--white);
         position: relative;
         transform: translateX(-61.8vw);
+        pointer-events: initial;
         &::before {
             content: "";
             height: var(--border-width);
