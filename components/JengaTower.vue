@@ -127,15 +127,18 @@ function onPointerUp() {
     world.removeConstraint(jointConstraint);
 }
 
-function initScene() {
-    if (sceneContainer.value === null) return;
+function cleanUp() {
     collisionBoxes.forEach(box => world.removeBody(box));
     collisionBoxes = [];
     blocks.forEach(block => scene.remove(block));
     blocks = [];
     lights.forEach(l => scene.add(l));
-    restart.value = false;
+}
 
+function initScene() {
+    if (sceneContainer.value === null) return;
+    restart.value = false;
+    cleanUp();
     (sceneContainer.value as HTMLDivElement).innerHTML = "";
 
     const aspect = window.innerWidth / window.innerHeight;
@@ -226,6 +229,7 @@ onMounted(() => {
     window.addEventListener("pointerup", onPointerUp, false);
 });
 onBeforeUnmount(() => {
+    cleanUp();
     window.removeEventListener("resize", resetAnimation, false);
     window.removeEventListener("pointerdown", onPointerDown, false);
     window.removeEventListener("pointermove", onPointerMove, false);
