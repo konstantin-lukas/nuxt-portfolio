@@ -31,6 +31,9 @@ const planeGeometry = new PlaneGeometry(100, 100);
 const movementPlane = new Mesh(planeGeometry);
 movementPlane.visible = false;
 
+const scene = new Scene();
+scene.add(movementPlane);
+
 const lights = [
     new DirectionalLight(0xFFFFFF, 1),
     new AmbientLight(0xFAE0A3, 1.5),
@@ -39,6 +42,7 @@ const lights = [
 lights[0].position.set(100, 200, 0);
 (lights[0] as DirectionalLight).target.position.set(0, 0, 0);
 lights[0].castShadow = true;
+lights.forEach(l => scene.add(l));
 
 const blockWidth = 2.5;
 const blockHeight = 1.5;
@@ -47,9 +51,6 @@ const layers = 14;
 
 const world = new World();
 world.gravity.set(0, -30, 0);
-
-const scene = new Scene();
-scene.add(movementPlane);
 
 const groundGeometry = new PlaneGeometry(200, 200);
 const shadowMaterial = new ShadowMaterial({ opacity: 0.1 });
@@ -143,7 +144,6 @@ function cleanUp() {
     collisionBoxes = [];
     blocks.forEach(block => scene.remove(block));
     blocks = [];
-    lights.forEach(l => scene.remove(l));
 }
 
 function initScene() {
@@ -179,7 +179,6 @@ function initScene() {
     (lights[0] as DirectionalLight).shadow.camera.far = 300;
     (lights[0] as DirectionalLight).shadow.camera.updateProjectionMatrix();
 
-    lights.forEach(l => scene.add(l));
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     (sceneContainer.value as HTMLDivElement).appendChild(renderer.domElement);
