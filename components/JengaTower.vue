@@ -5,9 +5,11 @@ import {
     Mesh,
     MeshStandardMaterial,
     OrthographicCamera,
+    PCFSoftShadowMap,
     PlaneGeometry,
     Raycaster,
     Scene,
+    ShadowMaterial,
     TextureLoader,
     Vector2,
     type Vector3,
@@ -31,12 +33,12 @@ movementPlane.visible = false;
 
 const lights = [
     new DirectionalLight(0xFFFFFF, 1),
+    new AmbientLight(0xFAE0A3, 1.5),
     new AmbientLight(0xFFFFFF, 1),
-    new AmbientLight(0xFAE0A3, 1),
-    new AmbientLight(0xFAE0A3, 0.5),
 ];
-lights[0].position.set(5, 3, 1);
+lights[0].position.set(100, 200, 0);
 (lights[0] as DirectionalLight).target.position.set(0, 0, 0);
+lights[0].castShadow = true;
 
 const blockWidth = 2.5;
 const blockHeight = 1.5;
@@ -46,8 +48,15 @@ const layers = 14;
 const world = new World();
 world.gravity.set(0, -30, 0);
 
-let scene = new Scene();
+const scene = new Scene();
 scene.add(movementPlane);
+
+const groundGeometry = new PlaneGeometry(200, 200);
+const shadowMaterial = new ShadowMaterial({ opacity: 0.1 });
+const groundMesh = new Mesh(groundGeometry, shadowMaterial);
+groundMesh.rotation.x = -Math.PI / 2;
+groundMesh.receiveShadow = true;
+scene.add(groundMesh);
 
 const groundBody = new Body({
     type: Body.STATIC,
@@ -66,6 +75,8 @@ world.addBody(groundBody);
 
 const renderer = new WebGLRenderer({ antialias: true });
 renderer.setClearColor(0xFFFFFF, 0);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = PCFSoftShadowMap;
 
 const geometry = new RoundedBoxGeometry(blockWidth, blockHeight, blockDepth, 2, 0.1);
 const textureLoader = new TextureLoader();
@@ -132,7 +143,7 @@ function cleanUp() {
     collisionBoxes = [];
     blocks.forEach(block => scene.remove(block));
     blocks = [];
-    lights.forEach(l => scene.add(l));
+    lights.forEach(l => scene.remove(l));
 }
 
 function initScene() {
@@ -143,6 +154,8 @@ function initScene() {
 
     const aspect = window.innerWidth / window.innerHeight;
     const cameraSize = window.innerWidth > 600 ? 20 : 30;
+    const horizontalThird = (cameraSize * aspect) / 3;
+    const verticalThird = (cameraSize) / 3;
     camera = new OrthographicCamera(
         -cameraSize * aspect,
         cameraSize * aspect,
@@ -152,12 +165,19 @@ function initScene() {
         1000,
     );
 
-    const horizontalThird = (cameraSize * aspect) / 3;
-    const verticalThird = (cameraSize) / 3;
-    camera.position.set(25, layers + 7, 10);
+    camera.position.set(250, 10 * layers + 70, 100);
     camera.lookAt(0, layers - 8, 0);
     camera.translateX(-horizontalThird - blockWidth);
     camera.translateY(verticalThird - (blockHeight * layers) / 6);
+
+    (lights[0] as DirectionalLight).shadow.mapSize.set(5000, 5000);
+    (lights[0] as DirectionalLight).shadow.camera.left = -cameraSize * aspect * 2;
+    (lights[0] as DirectionalLight).shadow.camera.right = cameraSize * aspect * 2;
+    (lights[0] as DirectionalLight).shadow.camera.top = cameraSize * 4;
+    (lights[0] as DirectionalLight).shadow.camera.bottom = -cameraSize * 4;
+    (lights[0] as DirectionalLight).shadow.camera.near = 1;
+    (lights[0] as DirectionalLight).shadow.camera.far = 300;
+    (lights[0] as DirectionalLight).shadow.camera.updateProjectionMatrix();
 
     lights.forEach(l => scene.add(l));
 
@@ -199,9 +219,11 @@ function generateTower(scene: Scene) {
                 block.rotation.y = Math.PI / 2;
                 block.position.set(0, stackHeight * 1.1, (j - 1) * blockWidth + previousRandom);
             }
+            block.castShadow = true;
+            block.receiveShadow = true;
 
             const blockBody = new Body({
-                mass: 5,
+                mass: 0.1,
                 position: new Vec3(block.position.x, block.position.y, block.position.z),
                 shape: blockShape,
             });
