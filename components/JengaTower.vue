@@ -21,7 +21,7 @@ import { Body, Box, Plane, PointToPointConstraint, Sphere, Vec3, World } from "c
 const sceneContainer = ref(null);
 const restart = ref(false);
 const isDragging = ref(false);
-let camera = new OrthographicCamera();
+const camera = new OrthographicCamera();
 let blocks: Mesh[] = [];
 let jointConstraint: PointToPointConstraint;
 let collisionBoxes: Body[] = [];
