@@ -12,6 +12,7 @@
 @import "../assets/styles/mixins";
 a {
     color: var(--white);
+    user-select: none;
     background-color: transparent;
     border: var(--border-width) solid var(--black);
     position: relative;
