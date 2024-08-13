@@ -142,7 +142,7 @@ onBeforeUnmount(() => {
 }
 
 .fade-enter-active, .fade-leave-active {
-    transition: all 200ms linear;
+    transition: opacity 500ms linear;
 }
 
 .container {
