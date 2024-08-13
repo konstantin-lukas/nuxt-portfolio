@@ -21,7 +21,7 @@ import { Body, Box, Plane, PointToPointConstraint, Sphere, Vec3, World } from "c
 const sceneContainer = ref(null);
 const restart = ref(false);
 const isDragging = ref(false);
-let camera: OrthographicCamera;
+let camera = new OrthographicCamera();
 let blocks: Mesh[] = [];
 let jointConstraint: PointToPointConstraint;
 let collisionBoxes: Body[] = [];
@@ -139,32 +139,19 @@ function onPointerUp() {
     world.removeConstraint(jointConstraint);
 }
 
-function cleanUp() {
-    collisionBoxes.forEach(box => world.removeBody(box));
-    collisionBoxes = [];
-    blocks.forEach(block => scene.remove(block));
-    blocks = [];
-}
-
-function initScene() {
-    if (sceneContainer.value === null) return;
-    restart.value = false;
-    cleanUp();
-    (sceneContainer.value as HTMLDivElement).innerHTML = "";
-
+function onResize() {
     const aspect = window.innerWidth / window.innerHeight;
     const cameraSize = window.innerWidth > 600 ? 20 : 30;
     const horizontalThird = (cameraSize * aspect) / 3;
     const verticalThird = (cameraSize) / 3;
-    camera = new OrthographicCamera(
-        -cameraSize * aspect,
-        cameraSize * aspect,
-        cameraSize,
-        -cameraSize,
-        1,
-        1000,
-    );
-
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    renderer.setSize(width, height);
+    camera.left = -cameraSize * aspect;
+    camera.right = cameraSize * aspect;
+    camera.top = cameraSize;
+    camera.bottom = -cameraSize;
+    camera.updateProjectionMatrix();
     camera.position.set(250, 10 * layers + 70, 100);
     camera.lookAt(0, layers - 8, 0);
     camera.translateX(-horizontalThird - blockWidth);
@@ -179,8 +166,21 @@ function initScene() {
     (lights[0] as DirectionalLight).shadow.camera.far = 300;
     (lights[0] as DirectionalLight).shadow.camera.updateProjectionMatrix();
 
-
     renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function cleanUp() {
+    collisionBoxes.forEach(box => world.removeBody(box));
+    collisionBoxes = [];
+    blocks.forEach(block => scene.remove(block));
+    blocks = [];
+    if (sceneContainer.value !== null) (sceneContainer.value as HTMLDivElement).innerHTML = "";
+}
+
+function initScene() {
+    if (sceneContainer.value === null) return;
+    restart.value = false;
+    onResize();
     (sceneContainer.value as HTMLDivElement).appendChild(renderer.domElement);
 
     generateTower(scene);
@@ -237,21 +237,16 @@ function generateTower(scene: Scene) {
     }
 }
 
-function resetAnimation() {
-    restart.value = true;
-    initScene();
-}
-
 onMounted(() => {
     initScene();
-    window.addEventListener("resize", resetAnimation, false);
+    window.addEventListener("resize", onResize, false);
     window.addEventListener("pointerdown", onPointerDown, false);
     window.addEventListener("pointermove", onPointerMove, false);
     window.addEventListener("pointerup", onPointerUp, false);
 });
 onBeforeUnmount(() => {
     cleanUp();
-    window.removeEventListener("resize", resetAnimation, false);
+    window.removeEventListener("resize", onResize, false);
     window.removeEventListener("pointerdown", onPointerDown, false);
     window.removeEventListener("pointermove", onPointerMove, false);
     window.removeEventListener("pointerup", onPointerUp, false);
