@@ -40,14 +40,14 @@ const route = useRoute();
                     to="/datenschutz"
                     @click="$emit('navigation')"
                 >
-                    Datenschutz
+                    <span>Datenschutz</span>
                 </NuxtLink>
                 <NuxtLink
                     class="notice"
                     to="/impressum"
                     @click="$emit('navigation')"
                 >
-                    Impressum
+                    <span>Impressum</span>
                 </NuxtLink>
             </div>
         </nav>
@@ -246,11 +246,14 @@ span.anchor {
     display: flex;
     align-items: flex-end;
     a {
-        font-size: 3vh;
-        margin-right: 1em;
         opacity: 1;
-        padding-bottom: 0;
-        transition: padding-bottom .5s cubic-bezier(0, .5, .5, 1);
+        padding: 0;
+        margin-right: .618em;
+        span {
+            font-size: 3vh;
+            padding: 0;
+            transition: transform .5s cubic-bezier(0, .5, .5, 1);
+        }
         &::before {
             content: "";
             background-color: var(--pink);
@@ -265,8 +268,8 @@ span.anchor {
         &:hover::before {
             transform: scaleX(1);
         }
-        &:hover {
-            padding-bottom: .4em;
+        &:hover span {
+            transform: translateY(-38.2%);
         }
         &:last-of-type {
             margin-right: 0;
