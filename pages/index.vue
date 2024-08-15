@@ -2,17 +2,16 @@
 useHead({
     title: "Konstantin Lukas | Full-Stack Developer",
 });
+const towerHasLoaded = ref(false);
 </script>
 
 <template>
     <ClientOnly>
-        <JengaTower/>
-        <template #fallback>
-            <div id="load-spinner">
-                <LoadSpinner/>
-            </div>
-        </template>
+        <JengaTower @loaded="() => towerHasLoaded = true"/>
     </ClientOnly>
+    <div v-if="!towerHasLoaded" id="load-spinner">
+        <LoadSpinner/>
+    </div>
     <div class="container">
         <div class="heading-container">
             <h1>Konstantin Lukas</h1>

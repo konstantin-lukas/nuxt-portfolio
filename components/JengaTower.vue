@@ -84,9 +84,20 @@ renderer.shadowMap.type = PCFSoftShadowMap;
 
 const geometry = new RoundedBoxGeometry(blockWidth, blockHeight, blockDepth, 2, 0.1);
 const textureLoader = new TextureLoader();
-const topTextures = Array.from({ length: 7 }, (_, i) => textureLoader.load(`/images/textures/top${i + 1}.webp`));
-const shortTextures = Array.from({ length: 12 }, (_, i) => textureLoader.load(`/images/textures/short${i + 1}.webp`));
-const sideTextures = Array.from({ length: 12 }, (_, i) => textureLoader.load(`/images/textures/side${i + 1}.webp`));
+let loadedTextures = ref(0);
+const topCount = 7;
+const shortCount = 12;
+const sideCount = 12;
+const topTextures = Array.from({ length: topCount }, (_, i) => {
+    return textureLoader.load(`/images/textures/top${i + 1}.webp`, () => loadedTextures.value++);
+});
+const shortTextures = Array.from({ length: shortCount }, (_, i) => {
+    return textureLoader.load(`/images/textures/short${i + 1}.webp`, () => loadedTextures.value++);
+});
+const sideTextures = Array.from({ length: sideCount }, (_, i) => {
+    return textureLoader.load(`/images/textures/side${i + 1}.webp`, () => loadedTextures.value++);
+});
+
 function textureToMaterials(t: Texture) {
     const t1 = new MeshStandardMaterial({ map: t });
     const tmp = t.clone();
@@ -258,7 +269,6 @@ function generateTower(scene: Scene) {
         stackHeight += blockHeight;
     }
 }
-
 onMounted(() => {
     initScene();
     window.addEventListener("resize", onResize, false);
@@ -273,10 +283,16 @@ onBeforeUnmount(() => {
     window.removeEventListener("pointermove", onPointerMove, false);
     window.removeEventListener("pointerup", onPointerUp, false);
 });
+const emit = defineEmits<{
+    (e: "loaded"): void;
+}>();
+watch(loadedTextures, () => {
+    if (topCount + sideCount + shortCount === loadedTextures.value) emit("loaded");
+});
 </script>
 
 <template>
-    <div ref="sceneContainer"/>
+    <div ref="sceneContainer" v-show="topCount + sideCount + shortCount === loadedTextures"/>
 </template>
 
 <style scoped lang="scss">
