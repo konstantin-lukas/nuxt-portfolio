@@ -8,8 +8,10 @@ import {
     PCFSoftShadowMap,
     PlaneGeometry,
     Raycaster,
+    RepeatWrapping,
     Scene,
     ShadowMaterial,
+    type Texture,
     TextureLoader,
     Vector2,
     type Vector3,
@@ -50,7 +52,7 @@ const blockDepth = 7.5;
 const layers = 14;
 
 const world = new World();
-world.gravity.set(0, -30, 0);
+world.gravity.set(0, -9.8, 0);
 
 const groundGeometry = new PlaneGeometry(200, 200);
 const shadowMaterial = new ShadowMaterial({ opacity: 0.1 });
@@ -73,6 +75,7 @@ jointBody.collisionFilterMask = 0;
 world.addBody(jointBody);
 groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(groundBody);
+world.allowSleep = true;
 
 const renderer = new WebGLRenderer({ antialias: true });
 renderer.setClearColor(0xFFFFFF, 0);
@@ -81,12 +84,21 @@ renderer.shadowMap.type = PCFSoftShadowMap;
 
 const geometry = new RoundedBoxGeometry(blockWidth, blockHeight, blockDepth, 2, 0.1);
 const textureLoader = new TextureLoader();
-const topSideTexture = textureLoader.load("/images/textures/top_side.jpg");
-const shortSideTexture = textureLoader.load("/images/textures/short_side.jpg");
-const longSideTexture = textureLoader.load("/images/textures/long_side.jpg");
-const materialTopSide = new MeshStandardMaterial({ map: topSideTexture });
-const materialShortSide = new MeshStandardMaterial({ map: shortSideTexture });
-const materialLongSide = new MeshStandardMaterial({ map: longSideTexture });
+const topTextures = Array.from({ length: 7 }, (_, i) => textureLoader.load(`/images/textures/top${i + 1}.webp`));
+const shortTextures = Array.from({ length: 12 }, (_, i) => textureLoader.load(`/images/textures/short${i + 1}.webp`));
+const sideTextures = Array.from({ length: 12 }, (_, i) => textureLoader.load(`/images/textures/side${i + 1}.webp`));
+function textureToMaterials(t: Texture) {
+    const t1 = new MeshStandardMaterial({ map: t });
+    const tmp = t.clone();
+    tmp.wrapS = RepeatWrapping;
+    tmp.wrapT = RepeatWrapping;
+    tmp.rotation = Math.PI;
+    const t2 = new MeshStandardMaterial({ map: tmp });
+    return [t1, t2];
+};
+const topMaterials = topTextures.flatMap(textureToMaterials);
+const shortMaterials = shortTextures.flatMap(textureToMaterials);
+const sideMaterials = sideTextures.flatMap(textureToMaterials);
 const blockShape = new Box(new Vec3(blockWidth / 2, blockHeight / 2, blockDepth / 2));
 
 function getHitPoint(clientX: number, clientY: number, meshes: Mesh[]) {
@@ -115,6 +127,10 @@ function addJointConstraint(position: Vec3, constrainedBody: Body) {
 function onPointerDown(e: PointerEvent) {
     const intersection = getHitPoint(e.clientX, e.clientY, blocks);
     if (!intersection) return;
+    collisionBoxes.forEach((box) => {
+        box.wakeUp();
+        box.allowSleep = false;
+    });
     const idx = blocks.indexOf(intersection?.object as any);
     const hp = intersection?.point;
     const hitPoint = new Vec3(...hp);
@@ -137,6 +153,9 @@ function onPointerMove(e: PointerEvent) {
 function onPointerUp() {
     isDragging.value = false;
     world.removeConstraint(jointConstraint);
+    collisionBoxes.forEach((box) => {
+        box.allowSleep = true;
+    });
 }
 
 function onResize() {
@@ -187,7 +206,7 @@ function initScene() {
 
     const animate = () => {
         if (restart.value) return;
-        world.fixedStep();
+        world.step(1 / 30);
         for (let i = 0; i < blocks.length; i++) {
             blocks[i].position.copy(collisionBoxes[i].position);
             blocks[i].quaternion.copy(collisionBoxes[i].quaternion);
@@ -199,18 +218,18 @@ function initScene() {
 }
 
 function generateTower(scene: Scene) {
-    let stackHeight = 0;
+    let stackHeight = blockHeight;
     for (let i = 0; i < layers; i++) {
         let previousRandom = 0;
         for (let j = 0; j < 3; j++) {
             previousRandom += (Math.random() - 0.5) * 0.1;
             const block = new Mesh(geometry, [
-                materialLongSide,
-                materialLongSide,
-                materialTopSide,
-                materialTopSide,
-                materialShortSide,
-                materialShortSide,
+                sideMaterials[Math.floor(Math.random() * sideMaterials.length)],
+                sideMaterials[Math.floor(Math.random() * sideMaterials.length)],
+                topMaterials[Math.floor(Math.random() * topMaterials.length)],
+                topMaterials[Math.floor(Math.random() * topMaterials.length)],
+                shortMaterials[Math.floor(Math.random() * shortMaterials.length)],
+                shortMaterials[Math.floor(Math.random() * shortMaterials.length)],
             ]);
             block.position.set((j - 1) * blockWidth + previousRandom, stackHeight * 1.1, 0);
 
@@ -226,6 +245,9 @@ function generateTower(scene: Scene) {
                 position: new Vec3(block.position.x, block.position.y, block.position.z),
                 shape: blockShape,
             });
+            blockBody.allowSleep = true;
+            blockBody.sleepSpeedLimit = 0.2;
+            blockBody.sleepTimeLimit = 3;
             blockBody.quaternion.setFromAxisAngle(new Vec3(0, 1, 0), block.rotation.y);
             world.addBody(blockBody);
             collisionBoxes.push(blockBody);
