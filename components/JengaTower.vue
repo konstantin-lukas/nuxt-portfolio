@@ -153,6 +153,15 @@ function onPointerDown(e: PointerEvent) {
 }
 
 function onPointerMove(e: PointerEvent) {
+    if (isDragging.value) {
+        document.body.style.cursor = "grabbing";
+    } else {
+        const intersection = getHitPoint(e.clientX, e.clientY, blocks);
+        if (intersection)
+            document.body.style.cursor = "grab";
+        else
+            document.body.style.cursor = "initial";
+    }
     if (!isDragging.value) return;
     const hitPoint = getHitPoint(e.clientX, e.clientY, [movementPlane]);
     if (hitPoint) {
