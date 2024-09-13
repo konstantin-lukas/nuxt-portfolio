@@ -19,6 +19,9 @@ export default defineNuxtConfig({
         "/datenschutz": { prerender: true },
     },
     fonts: {
+        experimental: {
+            disableLocalFallbacks: true,
+        },
         families: [{
             name: "Josefin Sans",
             provider: "google",

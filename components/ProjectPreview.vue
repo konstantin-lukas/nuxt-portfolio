@@ -38,7 +38,7 @@ onBeforeUnmount(() => {
                 :src="`/images/projects/${name}.webp`"
                 draggable="false"
                 preload
-                sizes="xxl:733px xl:488px lg:391px md:293px sm:576px xs:288px"
+                sizes="xxl:733px xl:488px lg:391px md:293px sm:576px"
             />
         </button>
     </div>

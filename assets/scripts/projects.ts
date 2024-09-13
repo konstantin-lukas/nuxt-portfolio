@@ -40,6 +40,10 @@ const projects: Project[] = [
                 text: "GitHub",
                 url: "https://github.com/konstantin-lukas/oslo",
             },
+            {
+                text: "Store",
+                url: "https://www.microsoft.com/store/productId/9N26D41H49GF?ocid=pdpshare",
+            },
         ],
     },
     {

@@ -127,7 +127,7 @@ onBeforeUnmount(() => {
             style="display: none;"
             :src="`/images/projects/${p.name}.webp`"
             draggable="false"
-            sizes="xxl:1080px xl:640px lg:512px md:384 sm:320 xs:160"
+            sizes="xxl:1080px xl:640px lg:512px"
         />
     </div>
 </template>
