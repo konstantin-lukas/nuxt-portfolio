@@ -22,6 +22,32 @@ const projects: Project[] = [
         ],
     },
     {
+        name: "verivote",
+        title: "Verivote",
+        year: 2024,
+        context: "Hobbyprojekt",
+        type: "Webseite",
+        about:
+            "Verivote ist die Neuauflage einer früheren Webseite von mir, die ursprünglich mit PHP und MariaDB "
+            + "entwickelt wurde. Die Plattform ermöglicht es Nutzern, Umfragen zu erstellen und mit Freunden zu teilen. "
+            + "Ein besonderes Merkmal von Verivote ist die Unterstützung verschiedener Abstimmungsverfahren, wie zum "
+            + "Beispiel das Sortieren der Kandidaten nach Präferenzen. Da die ursprüngliche Umsetzung nicht mehr meinen "
+            + "aktuellen technischen Anforderungen entsprach, habe ich das Projekt vollständig überarbeitet und das "
+            + "Design dezent angepasst. Das Frontend basiert nun auf Next.js, während das Backend in Go entwickelt "
+            + "wurde. Die MariaDB-Datenbank wurde durch MongoDB ersetzt, was eine deutlich vereinfachte "
+            + "Datenmodellierung ermöglicht.",
+        links: [
+            {
+                text: "Besuchen",
+                url: "https://verivote.eu/",
+            },
+            {
+                text: "GitHub",
+                url: "https://github.com/konstantin-lukas/verivote",
+            },
+        ],
+    },
+    {
         name: "oslo",
         title: "Oslo",
         year: 2020,
